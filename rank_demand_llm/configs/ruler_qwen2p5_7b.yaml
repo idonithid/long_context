@@ -1,0 +1,42 @@
+# Rank-demand experiment: RULER x Qwen2.5-7B-Instruct
+model_id: Qwen/Qwen2.5-7B-Instruct
+seed: 1234
+dtype: auto            # auto -> bf16 on sm>=80, fp16 on Turing (this box), fp32 on CPU
+load_4bit: false
+attn_implementation_measure: eager   # required to extract attention weights
+attn_implementation_generate: sdpa   # efficient kernel for the generation pass
+max_new_tokens: 64
+
+data_dir: results/data
+output_dir: results/run
+
+# task -> family (names verified against external/RULER/scripts/synthetic.yaml)
+tasks:
+  niah_single_1: single_needle       # noise haystack, 1 needle
+  niah_multikey_1: multi_needle      # essay haystack, 4 keys, 1 queried
+  vt: multi_hop_tracing              # variable tracking, 1 chain x 4 hops
+  cwe: aggregation                   # common-words extraction, top-10
+  qa_1: qa                           # SQuAD-based QA
+
+smoke:
+  context_lengths: [1024, 2048]
+  num_samples: 5
+
+main:
+  context_lengths: [1024, 2048, 4096, 8192]
+  num_samples: 50
+
+metrics:
+  layer_fractions: [0.0, 0.25, 0.5, 0.75, 1.0]
+  center_hidden: true
+  hidden_subsample_max_tokens: 8192   # stride-subsample tokens above this
+  exact_attention_max_tokens: 2048    # full attention matrices only below this
+  allow_exact_attention_4096: false   # explicit opt-in (also --allow_exact_attention_4096)
+  exact_rank_max_tokens: 1024         # exact effective rank of full A only below this
+  block_size: 64
+  all_heads_max_tokens: 1024          # all heads below this, else sampled heads
+  sampled_heads: [0, middle, last]
+  evidence_ks: [8, 16, 32, 64, 128, 256]
+  score_matrix: true                  # pre-softmax QK^T diagnostics (selected heads)
+  store_attention: false              # never store full A unless explicitly enabled
+  truncation_ks: [4, 8, 16, 32, 64, 128]

@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+external/RULER/
+results/*
+!results/.gitkeep
+reports/*
+!reports/.gitkeep
+*.npz
+*.log
