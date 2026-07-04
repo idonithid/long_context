@@ -69,9 +69,16 @@ class NTKExtractor:
         for p in self.params.values():
             p.requires_grad_(True)
         try:
-            self.model.gradient_checkpointing_enable()
+            # use_reentrant=False is required: reentrant checkpointing needs
+            # requires_grad inputs, but our embeddings are frozen.
+            self.model.gradient_checkpointing_enable(
+                gradient_checkpointing_kwargs={"use_reentrant": False})
         except Exception as e:
             logger.warning("gradient checkpointing unavailable: %s", e)
+        # HF checkpointing is gated on module.training — in eval mode it is a
+        # silent no-op (caused backward OOM at 4096 tokens). Qwen2.5 has
+        # attention_dropout=0.0, so train mode stays deterministic here.
+        self.model.train()
         return self
 
     def __exit__(self, *exc):

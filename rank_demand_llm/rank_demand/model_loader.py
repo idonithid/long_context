@@ -132,6 +132,9 @@ def load_model_and_tokenizer(
         _register_eager_fp32()
         attn_implementation = "eager_fp32"
     _register_sdpa_nogqa()
+    if (attn_implementation == "sdpa" and torch.cuda.is_available()
+            and torch.cuda.get_device_capability(0) < (8, 0)):
+        attn_implementation = "sdpa_nogqa"  # see _register_sdpa_nogqa docstring
     logger.info("Loading %s (dtype=%s, attn=%s, 4bit=%s)",
                 model_id, torch_dtype, attn_implementation, load_4bit)
     if not attn_implementation.startswith("eager"):

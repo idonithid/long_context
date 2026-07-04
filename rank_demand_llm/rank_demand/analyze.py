@@ -156,22 +156,48 @@ def run_regressions(df: pd.DataFrame) -> dict:
         "+entropy": ["context_length", "entropy"],
         "+entropy+rank": ["context_length", "entropy"] + rank_cols,
     }
+    from sklearn.model_selection import StratifiedKFold, cross_val_predict
+    from sklearn.pipeline import make_pipeline
+
     res["models"] = {}
+    do_cv = n >= 60 and min((y == 0).sum(), (y == 1).sum()) >= 10
     for name, cols in models.items():
         X_cont = np.column_stack([cont_all[c] for c in cols])
-        X_cont = StandardScaler().fit_transform(X_cont)
-        X = np.column_stack([X_cont, fam.values.astype(float)])
+        X_scaled = StandardScaler().fit_transform(X_cont)
+        X = np.column_stack([X_scaled, fam.values.astype(float)])
         clf = LogisticRegression(max_iter=2000, C=1.0)
         clf.fit(X, y)
         prob = clf.predict_proba(X)[:, 1]
         auc = roc_auc_score(y, prob)
         coef_names = cols + list(fam.columns)
-        res["models"][name] = {
+        entry = {
             "auc_in_sample": round(float(auc), 4),
             "coefficients": {c: round(float(w), 4)
                              for c, w in zip(coef_names, clf.coef_[0])},
         }
-    aucs = {k: v["auc_in_sample"] for k, v in res["models"].items()}
+        if do_cv:
+            # scaler inside the pipeline -> no leakage across folds
+            pipe = make_pipeline(StandardScaler(),
+                                 LogisticRegression(max_iter=2000, C=1.0))
+            Xr = np.column_stack([X_cont, fam.values.astype(float)])
+            cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=0)
+            prob_cv = cross_val_predict(pipe, Xr, y, cv=cv,
+                                        method="predict_proba")[:, 1]
+            entry["auc_cv5"] = round(float(roc_auc_score(y, prob_cv)), 4)
+            # simple bootstrap CI on CV AUC
+            rng = np.random.default_rng(0)
+            boots = []
+            for _ in range(500):
+                idx = rng.integers(0, n, n)
+                if y[idx].min() != y[idx].max():
+                    boots.append(roc_auc_score(y[idx], prob_cv[idx]))
+            if boots:
+                entry["auc_cv5_ci95"] = [round(float(np.percentile(boots, q)), 4)
+                                         for q in (2.5, 97.5)]
+        res["models"][name] = entry
+    key = "auc_cv5" if do_cv else "auc_in_sample"
+    aucs = {k: v[key] for k, v in res["models"].items()}
+    res["auc_metric_used"] = key
     res["delta_auc_rank_beyond_entropy"] = round(
         aucs["+entropy+rank"] - aucs["+entropy"], 4)
     return res
@@ -233,6 +259,71 @@ def analyze_ntk(results_dir: Path, df: pd.DataFrame, fig_dir: Path) -> dict:
     return out
 
 
+def analyze_truncation(rows: list[dict], fig_dir: Path) -> dict:
+    """Offline low-rank intervention proxy: ||AV - A_kV||/||AV|| by family/k,
+    and its association with correctness. Returns {} if no truncation data."""
+    recs = []
+    for r in rows:
+        tr = (r.get("metrics_summary") or {}).get("truncation") or {}
+        for li, per_head in tr.items():
+            for h, m in per_head.items():
+                if "ks" in m:
+                    for k, e in zip(m["ks"], m["rel_error"]):
+                        recs.append({"sample_id": r["sample_id"],
+                                     "task_family": r["task_family"],
+                                     "correct": r.get("correct"),
+                                     "layer": int(li), "head": int(h),
+                                     "k": int(k), "rel_error": float(e)})
+    if not recs:
+        return {}
+    td = pd.DataFrame(recs)
+    out: dict = {"n_samples": td.sample_id.nunique()}
+    out["rel_error_by_family_k"] = (
+        td.groupby(["task_family", "k"])["rel_error"].mean().round(4)
+        .unstack("k").to_dict("index"))
+    # per-sample scalar: mean rel_error at k=16 across layers/heads
+    s16 = (td[td.k == 16].groupby("sample_id")
+           .agg(rel_error_k16=("rel_error", "mean"),
+                correct=("correct", "first"),
+                task_family=("task_family", "first")).reset_index())
+    sc = s16.dropna(subset=["correct"])
+    if len(sc) and sc.correct.nunique() > 1:
+        a = sc[sc.correct == True]["rel_error_k16"]   # noqa: E712
+        b = sc[sc.correct == False]["rel_error_k16"]  # noqa: E712
+        out["rel_error_k16_correct"] = round(float(a.mean()), 4)
+        out["rel_error_k16_incorrect"] = round(float(b.mean()), 4)
+        try:
+            from scipy.stats import mannwhitneyu
+            out["mannwhitney_p"] = round(float(
+                mannwhitneyu(a, b, alternative="two-sided").pvalue), 4)
+        except Exception:
+            pass
+    else:
+        out["correctness_split"] = "degenerate (all correct or all wrong)"
+    # plot: error vs k per family (mid-depth layers only for readability)
+    try:
+        from rank_demand.plots import FAMILY_ORDER, _fam_color, _save
+        import matplotlib.pyplot as plt
+        fig, ax = plt.subplots(figsize=(6, 4))
+        for fam in FAMILY_ORDER:
+            sub = td[td.task_family == fam]
+            if sub.empty:
+                continue
+            g = sub.groupby("k")["rel_error"].mean()
+            ax.plot(g.index, g.values, "-o", lw=2, ms=5,
+                    color=_fam_color(fam), label=fam)
+        ax.set_xscale("log", base=2)
+        ax.set_xlabel("k (rank of truncated attention)")
+        ax.set_ylabel(r"$\|AV - A_k V\| / \|AV\|$")
+        ax.set_title("Attention low-rank reconstruction error by task family")
+        ax.legend(frameon=False, fontsize=8)
+        _save(fig, fig_dir / "truncation_error.png")
+        out["plot"] = "figures/truncation_error.png"
+    except Exception as e:
+        logger.warning("truncation plot failed: %s", e)
+    return out
+
+
 def survival_curves_for_plot(rows: list[dict]) -> dict:
     """Average evidence-survival curves across samples per layer."""
     acc: dict[str, dict] = {}
@@ -261,7 +352,8 @@ def survival_curves_for_plot(rows: list[dict]) -> dict:
 
 
 def write_report(results_dir: Path, report_dir: Path, df, df_layer, tables,
-                 reg, fig_paths, rows, ntk: dict | None = None):
+                 reg, fig_paths, rows, ntk: dict | None = None,
+                 trunc: dict | None = None):
     meta = {}
     meta_p = results_dir / "run_meta.json"
     if meta_p.exists():
@@ -339,6 +431,11 @@ def write_report(results_dir: Path, report_dir: Path, df, df_layer, tables,
                   "```json", json.dumps(
                       {k: v for k, v in ntk.items() if k != "gram_plot"},
                       indent=2, default=str), "```", ""]
+    if trunc:
+        lines += ["", "## Low-rank attention truncation (offline diagnostic)\n",
+                  "```json", json.dumps(
+                      {k: v for k, v in trunc.items() if k != "plot"},
+                      indent=2, default=str), "```", ""]
     lines += ["", "## Preliminary verdict\n"]
     lines += [f"- {v}" for v in verdict]
     lines += ["- E. Continuation call: see console summary / next-command printout.", ""]
@@ -415,8 +512,14 @@ def main():
         if ntk.get("gram_plot"):
             figs.append(fig_dir / "ntk_gram.png")
 
+    trunc = analyze_truncation(rows, fig_dir)
+    if trunc:
+        print(f"\n=== truncation ===\n{json.dumps(trunc, indent=2, default=str)}")
+        if trunc.get("plot"):
+            figs.append(fig_dir / "truncation_error.png")
+
     out = write_report(results_dir, report_dir, df, df_layer, tables, reg,
-                       figs, rows, ntk)
+                       figs, rows, ntk, trunc)
     print(f"\nReport: {out}")
 
 
