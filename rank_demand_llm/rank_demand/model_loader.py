@@ -62,6 +62,42 @@ def _register_eager_fp32():
     logger.info("registered eager_fp32 attention (fp32 QK^T scores)")
 
 
+def _register_sdpa_nogqa():
+    """Register an SDPA variant that repeats KV heads instead of enable_gqa.
+
+    On sm_75, torch's memory-efficient SDPA kernel rejects `enable_gqa=True`
+    (transformers 4.57 passes it for GQA models), so SDPA silently falls back
+    to the math backend and materializes full fp32 T x T scores per layer —
+    6.8 GiB/layer at 8k tokens, which OOMs generation. Repeating KV heads up
+    front keeps the mem-efficient kernel eligible (0.4 GB peak at 8k).
+    """
+    from transformers.integrations.sdpa_attention import sdpa_attention_forward
+    from transformers.modeling_utils import ALL_ATTENTION_FUNCTIONS
+
+    try:
+        if "sdpa_nogqa" in ALL_ATTENTION_FUNCTIONS:
+            return
+    except TypeError:
+        pass
+
+    def sdpa_nogqa_attention_forward(module, query, key, value, attention_mask,
+                                     dropout: float = 0.0, scaling=None,
+                                     is_causal=None, **kwargs):
+        from transformers.models.qwen2.modeling_qwen2 import repeat_kv
+
+        if hasattr(module, "num_key_value_groups"):
+            key = repeat_kv(key, module.num_key_value_groups)
+            value = repeat_kv(value, module.num_key_value_groups)
+            # now n_heads == n_kv_heads -> upstream fn won't set enable_gqa
+        return sdpa_attention_forward(module, query, key, value,
+                                      attention_mask, dropout=dropout,
+                                      scaling=scaling, is_causal=is_causal,
+                                      **kwargs)
+
+    ALL_ATTENTION_FUNCTIONS.register("sdpa_nogqa", sdpa_nogqa_attention_forward)
+    logger.info("registered sdpa_nogqa attention (KV-repeat, mem-efficient kernel eligible)")
+
+
 def resolve_dtype(dtype: str) -> torch.dtype:
     if dtype == "auto":
         if torch.cuda.is_available() and torch.cuda.get_device_capability(0) >= (8, 0):
@@ -95,6 +131,7 @@ def load_model_and_tokenizer(
     if attn_implementation in ("eager", "eager_fp32") and torch_dtype == torch.float16:
         _register_eager_fp32()
         attn_implementation = "eager_fp32"
+    _register_sdpa_nogqa()
     logger.info("Loading %s (dtype=%s, attn=%s, 4bit=%s)",
                 model_id, torch_dtype, attn_implementation, load_4bit)
     if not attn_implementation.startswith("eager"):
@@ -146,6 +183,11 @@ def attn_impl(model, impl: str):
     """Temporarily switch attention implementation (e.g. eager -> sdpa for
     generation). Falls back to no-op with a log line if unsupported."""
     cfg = model.config
+    # sm<80: plain sdpa + GQA dispatches enable_gqa, which the mem-efficient
+    # kernel rejects -> math backend -> O(T^2) fp32 scores. Use KV-repeat variant.
+    if (impl == "sdpa" and torch.cuda.is_available()
+            and torch.cuda.get_device_capability(0) < (8, 0)):
+        impl = "sdpa_nogqa"
     old = getattr(cfg, "_attn_implementation", None)
     switched = False
     try:
