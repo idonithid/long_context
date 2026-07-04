@@ -16,6 +16,15 @@ else
     echo "RULER already cloned at $RULER_DIR"
 fi
 
+# Local fix: upstream qa.py hangs forever when `incremental` docs exceed
+# max_seq_length (hit at 1024 tokens). See scripts/patches/.
+if git -C "$RULER_DIR" apply --check "$REPO_DIR/scripts/patches/ruler_qa_fit_loop.patch" 2>/dev/null; then
+    git -C "$RULER_DIR" apply "$REPO_DIR/scripts/patches/ruler_qa_fit_loop.patch"
+    echo "applied ruler_qa_fit_loop.patch"
+else
+    echo "ruler_qa_fit_loop.patch already applied (or does not apply cleanly)"
+fi
+
 # Paul Graham essays (used by essay-haystack niah tasks, e.g. niah_multikey_1)
 if [ ! -f "$JSON_DIR/PaulGrahamEssays.json" ]; then
     echo "Downloading Paul Graham essays (one-time, a few minutes)..."

@@ -6,7 +6,7 @@ PY="${PY:-/home/initzan/anaconda3/envs/rank_demand/bin/python}"
 # default: first idle GPU (<1GB used), unless caller pins CUDA_VISIBLE_DEVICES
 if [ -z "${CUDA_VISIBLE_DEVICES:-}" ]; then
     CUDA_VISIBLE_DEVICES=$(nvidia-smi --query-gpu=index,memory.used --format=csv,noheader,nounits \
-        | awk -F', ' '$2 < 1000 {print $1; exit}')
+        | awk -F', ' '$2 < 1000 && !f {print $1; f=1}')
 fi
 export CUDA_VISIBLE_DEVICES
 echo "Using GPU $CUDA_VISIBLE_DEVICES"

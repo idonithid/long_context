@@ -4,8 +4,9 @@
 set -euo pipefail
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PY="${PY:-/home/initzan/anaconda3/envs/rank_demand/bin/python}"
+# awk must not early-exit: SIGPIPE to nvidia-smi + pipefail would kill the script
 GPU="${CUDA_VISIBLE_DEVICES:-$(nvidia-smi --query-gpu=index,memory.used --format=csv,noheader,nounits \
-    | awk -F', ' '$2 < 1000 {print $1; exit}')}"
+    | awk -F', ' '$2 < 1000 && !f {print $1; f=1}')}"
 echo "Using GPU $GPU"
 SESSION=rank_demand_main
 LOG="$REPO_DIR/results/main_run/main_run.log"

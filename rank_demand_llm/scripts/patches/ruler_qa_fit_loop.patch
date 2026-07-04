@@ -1,0 +1,24 @@
+diff --git a/scripts/data/synthetic/qa.py b/scripts/data/synthetic/qa.py
+index d71cf03..fffc801 100644
+--- a/scripts/data/synthetic/qa.py
++++ b/scripts/data/synthetic/qa.py
+@@ -202,8 +202,17 @@ def generate_samples(num_samples: int, max_seq_length: int, save_dir: str, incre
+                 assert length <= max_seq_length, f"{length} exceeds max_seq_length."
+                 break
+             except:
+-                if used_docs > incremental:
+-                    used_docs -= incremental
++                # LOCAL PATCH (rank_demand_llm): the upstream loop only shrinks
++                # while used_docs > incremental, so if `incremental` docs still
++                # exceed max_seq_length it spins forever (hit at 1024 tokens).
++                # Allow shrinking down to 1 doc; if even 1 doc cannot fit, fail
++                # loudly instead of hanging.
++                if used_docs > 1:
++                    used_docs = max(1, used_docs - incremental)
++                else:
++                    raise RuntimeError(
++                        f"QA sample {index} does not fit max_seq_length="
++                        f"{max_seq_length} even with a single document")
+ 
+         if args.remove_newline_tab:
+             input_text = ' '.join(input_text.replace('\n', ' ').replace('\t', ' ').strip().split())
