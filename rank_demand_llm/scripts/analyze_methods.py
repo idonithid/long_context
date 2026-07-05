@@ -117,7 +117,68 @@ def analyze_interference(idir: Path) -> dict:
     out["measured_dacc"] = {ti: {tj: measured[ti]["post"][tj]["dacc"]
                                  for tj in fams} for ti in fams}
     out["predicted_kernel"] = {k: v["mean_kernel"] for k, v in kernel.items()}
+    out["baselines"] = baseline_comparison(idir, measured, kernel, fams)
     return out
+
+
+def baseline_comparison(idir: Path, measured, kernel, fams) -> dict:
+    """Predictor shoot-out on the same measured dCE matrix.
+
+    Predictors (all computed pre-training):
+      ntk_kernel      mean <g_i, g_j> (the method)
+      ntk_cos         mean cosine (direction only)
+      grad_magnitude  |g_i|*|g_j| (magnitude only — is direction needed?)
+      embed_cos       mean cosine of last-hidden-state prompt embeddings
+    """
+    from scipy.stats import spearmanr
+
+    ids_by = {}
+    sk_path, emb_path = idir / "sketches.npz", idir / "embeddings.npz"
+    if not sk_path.exists():
+        return {"skip_reason": "no sketches.npz"}
+    z = np.load(sk_path)
+    for key in z.files:
+        tag, sid = key.split("__", 1)
+        # sample_id starts with task name (e.g. qa_1_1024_7 / gsm8k_train_3)
+        for t in fams:
+            if sid.startswith(t):
+                ids_by.setdefault((tag, t), []).append(key)
+                break
+    emb = np.load(emb_path) if emb_path.exists() else None
+
+    preds: dict[str, dict] = {"ntk_kernel": {}, "ntk_cos": {},
+                              "grad_magnitude": {}, "embed_cos": {}}
+    for ti in fams:
+        Si = np.stack([z[k] for k in ids_by[("train", ti)]])
+        ni = np.linalg.norm(Si, axis=1, keepdims=True)
+        for tj in fams:
+            Sj = np.stack([z[k] for k in ids_by[("eval", tj)]])
+            nj = np.linalg.norm(Sj, axis=1, keepdims=True)
+            G = Si @ Sj.T
+            preds["ntk_kernel"][(ti, tj)] = G.mean()
+            preds["ntk_cos"][(ti, tj)] = (G / (ni @ nj.T + 1e-30)).mean()
+            preds["grad_magnitude"][(ti, tj)] = (ni @ nj.T).mean()
+            if emb is not None:
+                Ei = np.stack([emb[k] for k in ids_by[("train", ti)] if k in emb.files])
+                Ej = np.stack([emb[k] for k in ids_by[("eval", tj)] if k in emb.files])
+                Ei /= np.linalg.norm(Ei, axis=1, keepdims=True) + 1e-30
+                Ej /= np.linalg.norm(Ej, axis=1, keepdims=True) + 1e-30
+                preds["embed_cos"][(ti, tj)] = (Ei @ Ej.T).mean()
+
+    pairs_all = [(ti, tj) for ti in fams for tj in fams]
+    pairs_off = [(ti, tj) for ti in fams for tj in fams if ti != tj]
+    meas = {p: measured[p[0]]["post"][p[1]]["dce"] for p in pairs_all}
+    res = {}
+    for name, P in preds.items():
+        if not P:
+            res[name] = {"skip_reason": "no data (embeddings missing?)"}
+            continue
+        for tag, pairs in [("all", pairs_all), ("off_diag", pairs_off)]:
+            rho, pval = spearmanr([-P[p] for p in pairs],
+                                  [meas[p] for p in pairs])
+            res.setdefault(name, {})[tag] = [round(float(rho), 4),
+                                             round(float(pval), 4)]
+    return res
 
 
 def main():

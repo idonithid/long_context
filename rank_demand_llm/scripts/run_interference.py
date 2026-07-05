@@ -52,8 +52,9 @@ def encode(tokenizer, s, device):
 
 
 @torch.no_grad()
-def eval_ce_acc(model, tokenizer, samples, device, gen_max_new=48):
-    """Gold-answer teacher-forced CE + greedy-decoding accuracy per sample."""
+def eval_ce_acc(model, tokenizer, samples, device, gen_max_new=48,
+                ce_only=False):
+    """Gold-answer teacher-forced CE (+ greedy accuracy unless ce_only)."""
     ces, accs = [], []
     for s in samples:
         ids, ans = encode(tokenizer, s, device)
@@ -62,11 +63,12 @@ def eval_ce_acc(model, tokenizer, samples, device, gen_max_new=48):
         labels[:, : ids.shape[1]] = -100
         ce = float(model(input_ids=full, labels=labels, use_cache=False).loss)
         ces.append(ce)
-        g = generate_answer(model, tokenizer, ids, max_new_tokens=gen_max_new)
-        sc = score_prediction(s["ruler_task"], g["prediction_text"],
-                              s["expected_answer"])
-        accs.append(float(sc["correct"]))
-    return float(np.mean(ces)), float(np.mean(accs))
+        if not ce_only:
+            g = generate_answer(model, tokenizer, ids, max_new_tokens=gen_max_new)
+            sc = score_prediction(s["ruler_task"], g["prediction_text"],
+                                  s["expected_answer"])
+            accs.append(float(sc["correct"]))
+    return float(np.mean(ces)), (float(np.mean(accs)) if accs else None)
 
 
 LOSS_SCALE = 1024.0
@@ -142,11 +144,27 @@ def main():
     ap.add_argument("--length", type=int, default=1024)
     ap.add_argument("--n_train", type=int, default=32)
     ap.add_argument("--n_eval", type=int, default=30)
-    ap.add_argument("--lr", type=float, default=2e-5)
+    ap.add_argument("--lr", type=float, default=None,
+                    help="default: 2e-5 subset, 2e-4 lora")
     ap.add_argument("--epochs", type=int, default=3)
     ap.add_argument("--train_data_dir", default="results/data_ft")
+    ap.add_argument("--eval_data_dir", default=None,
+                    help="override eval dir (default: cfg data_dir/main)")
+    ap.add_argument("--capabilities", nargs="*", default=None,
+                    help="capability/task names (default: cfg tasks)")
     ap.add_argument("--output_dir", default="results/interference")
+    ap.add_argument("--trainer", choices=["subset", "lora"], default="subset",
+                    help="subset: Adam on the sketched q/v params; "
+                         "lora: rank-r adapters on q/v of ALL layers "
+                         "(trained params != sketched params -> robustness)")
+    ap.add_argument("--lora_rank", type=int, default=16)
+    ap.add_argument("--lora_alpha", type=float, default=32.0)
+    ap.add_argument("--ce_only", action="store_true",
+                    help="skip greedy-decoding accuracy (CE-only outcome)")
+    ap.add_argument("--embeddings", action="store_true", default=True,
+                    help="save mean last-hidden-state embeddings (baselines)")
     args = ap.parse_args()
+    lr = args.lr or (2e-4 if args.trainer == "lora" else 2e-5)
 
     setup_logging()
     cfg = load_config(args.config)
@@ -155,9 +173,12 @@ def main():
     out_dir = REPO_ROOT / args.output_dir
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    families = cfg["tasks"]  # task -> family
-    eval_dir = REPO_ROOT / cfg["data_dir"] / "main"
-    train_dir = REPO_ROOT / args.train_data_dir / "main"
+    families = args.capabilities or list(cfg["tasks"])
+    eval_dir = Path(args.eval_data_dir).resolve() if args.eval_data_dir \
+        else REPO_ROOT / cfg["data_dir"] / "main"
+    train_dir = (REPO_ROOT / args.train_data_dir / "main"
+                 if not Path(args.train_data_dir).is_absolute()
+                 else Path(args.train_data_dir) / "main")
     eval_sets, train_sets = {}, {}
     for task in families:
         eval_sets[task] = read_jsonl(eval_dir / f"{task}_{args.length}.jsonl")[: args.n_eval]
@@ -186,10 +207,32 @@ def main():
                         ids, ans = encode(tokenizer, s, device)
                         f = ntk.features(ids, ans)
                         sketches[f"{tag}__{s['sample_id']}"] = f["sketch"]
-        np.savez_compressed(sk_path, **sketches)
+            np.savez_compressed(sk_path, **sketches)
     print(f"sketches: {len(sketches)} -> {sk_path}")
 
-    params = select_ntk_params(model, layers)
+    # --- embeddings (baseline predictor: representation similarity) ---
+    emb_path = out_dir / "embeddings.npz"
+    if args.embeddings and not emb_path.exists():
+        embs = {}
+        with torch.no_grad():
+            for task in families:
+                for tag, samples in [("train", train_sets[task]),
+                                     ("eval", eval_sets[task])]:
+                    for s in tqdm(samples, desc=f"embed {task} {tag}"):
+                        ids, _ = encode(tokenizer, s, device)
+                        out = model(input_ids=ids, output_hidden_states=True,
+                                    use_cache=False)
+                        h = out.hidden_states[-1][0].float().mean(dim=0)
+                        embs[f"{tag}__{s['sample_id']}"] = h.cpu().numpy()
+        np.savez_compressed(emb_path, **embs)
+        print(f"embeddings -> {emb_path}")
+
+    if args.trainer == "lora":
+        from rank_demand.lora import inject_lora, remove_lora
+        params = inject_lora(model, layers=None, r=args.lora_rank,
+                             alpha=args.lora_alpha)
+    else:
+        params = select_ntk_params(model, layers)
 
     # --- PRE eval ---
     pre_path = out_dir / "pre_eval.json"
@@ -198,9 +241,10 @@ def main():
     else:
         pre = {}
         for task in families:
-            ce, acc = eval_ce_acc(model, tokenizer, eval_sets[task], device)
+            ce, acc = eval_ce_acc(model, tokenizer, eval_sets[task], device,
+                                  ce_only=args.ce_only)
             pre[task] = {"ce": ce, "acc": acc}
-            print(f"PRE {task}: ce={ce:.4f} acc={acc:.2f}")
+            print(f"PRE {task}: ce={ce:.4f} acc={acc}")
         pre_path.write_text(json.dumps(pre, indent=2))
 
     # --- interference loop ---
@@ -215,22 +259,28 @@ def main():
         t0 = time.time()
         steps = finetune_subset(model, tokenizer, params,
                                 train_sets[train_task], device,
-                                lr=args.lr, epochs=args.epochs)
+                                lr=lr, epochs=args.epochs)
         post = {}
         for task in families:
-            ce, acc = eval_ce_acc(model, tokenizer, eval_sets[task], device)
+            ce, acc = eval_ce_acc(model, tokenizer, eval_sets[task], device,
+                                  ce_only=args.ce_only)
             post[task] = {"dce": round(ce - pre[task]["ce"], 5),
-                          "dacc": round(acc - pre[task]["acc"], 4),
+                          "dacc": (round(acc - pre[task]["acc"], 4)
+                                   if acc is not None else None),
                           "ce": ce, "acc": acc}
         measured[train_task] = {"steps": steps, "post": post,
+                                "trainer": args.trainer, "lr": lr,
                                 "minutes": round((time.time() - t0) / 60, 1)}
-        # restore
+        # restore params/adapters to the exact pre-training state (for LoRA
+        # this restores the same A-init for every family -> comparable runs)
         with torch.no_grad():
             for n, p in params.items():
                 p.copy_(snapshot[n])
         meas_path.write_text(json.dumps(measured, indent=2))
         print(f"train on {train_task}: "
               + " ".join(f"{t}:dce={post[t]['dce']:+.3f}" for t in families))
+    if args.trainer == "lora":
+        remove_lora(model)
 
     # --- predicted kernel matrix ---
     K = {}
