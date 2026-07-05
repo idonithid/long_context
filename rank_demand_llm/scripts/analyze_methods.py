@@ -139,9 +139,11 @@ def baseline_comparison(idir: Path, measured, kernel, fams) -> dict:
     z = np.load(sk_path)
     for key in z.files:
         tag, sid = key.split("__", 1)
-        # sample_id starts with task name (e.g. qa_1_1024_7 / gsm8k_train_3)
-        for t in fams:
-            if sid.startswith(t):
+        # sample_id usually starts with the capability name (qa_1_1024_7);
+        # tolerate ids that use a shortened stem (mbpp_eval_0 vs mbpp_code)
+        stem = sid.split(f"_{tag}_")[0] if f"_{tag}_" in sid else sid
+        for t in sorted(fams, key=len, reverse=True):
+            if sid.startswith(t) or t.startswith(stem):
                 ids_by.setdefault((tag, t), []).append(key)
                 break
     emb = np.load(emb_path) if emb_path.exists() else None
