@@ -4,7 +4,7 @@ For each sample we teacher-force the expected answer after the prompt and
 compute the gradient of the mean answer-token cross-entropy w.r.t. a SMALL
 parameter subset (default: q_proj/v_proj of the selected layers — the LoRA
 target intuition: these carry most task-adaptation signal at a tractable
-size, ~9M params for 5 layers of Qwen2.5-7B).
+size, ~73M params for 5 layers of Qwen2.5-7B; ~105M for Llama-3.1-8B).
 
 Per-sample features:
   - grad_norm            ||g||_2 over the subset (self-kernel sqrt)

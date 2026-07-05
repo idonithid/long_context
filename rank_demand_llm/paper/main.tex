@@ -29,7 +29,7 @@ silently degrading others, but which capabilities will transfer and which will i
 is usually discovered only after the (expensive) training run. We introduce a
 \emph{capability fingerprint}: for each capability we CountSketch-compress the per-prompt
 gradients of the answer cross-entropy with respect to a small, fixed parameter subset
-($\sim$9M of 7.6B parameters), and predict capability-level transfer from the mean sketch
+($\sim$73M of 7.6B parameters), and predict capability-level transfer from the mean sketch
 inner product between a candidate fine-tuning set and any held-out capability---\emph{before
 any training is run}. The predictor is the empirical neural tangent kernel: to first order,
 one gradient step on capability $i$ changes the loss on capability $j$ by
@@ -86,7 +86,7 @@ training dynamics actually live.
 \begin{enumerate}
   \item \textbf{A cheap, pre-training-time predictor of fine-tuning transfer and interference.}
     Per capability we compute a fingerprint---CountSketch-compressed per-prompt answer-loss
-    gradients on a fixed $\sim$9M-parameter subset (0.12\% of the model). The mean sketch inner
+    gradients on a fixed $\sim$73M-parameter subset (under 1\% of the model). The mean sketch inner
     product between a fine-tuning set and a held-out capability predicts that capability's
     measured $\Delta$CE after actual fine-tuning.
   \item \textbf{Validation across four settings} with the same recipe and no per-setting tuning:
@@ -191,8 +191,7 @@ memorizing exactly what we train.
 
 \paragraph{Parameter subset.}
 $S$ is the query and value projections (\texttt{q\_proj}, \texttt{v\_proj}) of five layers at
-depth fractions $\{0,\tfrac14,\tfrac12,\tfrac34,1\}$---approximately $9$M parameters of a $7.6$B
-model ($0.12\%$). It is fixed once per model and never tuned per task.
+depth fractions $\{0,\tfrac14,\tfrac12,\tfrac34,1\}$---approximately $73$M parameters of a $7.6$B model ($0.97\%$; $105$M for Llama-3.1-8B). It is fixed once per model and never tuned per task.
 
 \paragraph{Sketched fingerprints.}
 For each sample we run one forward and one backward pass on the frozen model with gradients

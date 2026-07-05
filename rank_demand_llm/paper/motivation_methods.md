@@ -11,7 +11,7 @@ Llama-3.1-8B-Instruct, July 2026).*
 1. **A cheap, pre-training-time predictor of fine-tuning transfer and interference.**
    For each capability (task/data distribution) we compute a *capability fingerprint*:
    CountSketch-compressed per-prompt gradients of the answer cross-entropy with respect
-   to a small, fixed parameter subset (~9M of 7.6B parameters). The mean sketch inner
+   to a small, fixed parameter subset (~73M of 7.6B parameters). The mean sketch inner
    product between a candidate fine-tuning set and any held-out capability predicts the
    *measured* change in that capability's loss after actually fine-tuning — before any
    training is run.
@@ -96,7 +96,7 @@ L(s; θ) = CE of y under f_θ(· | x), and the answer gradient g(s) = ∇_θ L(s
 to a fixed parameter subset S.
 
 **Parameter subset.** S = the query and value projections (q_proj, v_proj) of 5 layers at
-depth fractions {0, ¼, ½, ¾, 1} — approximately 9M parameters of a 7.6B model (0.12%).
+depth fractions {0, ¼, ½, ¾, 1} — approximately 73M parameters of a 7.6B model (0.97%; 105M for Llama-3.1-8B).
 The subset is fixed once per model and never tuned per task.
 
 **First-order rationale.** One SGD step on sample s_i with learning rate η changes the
@@ -108,8 +108,8 @@ of capability-level transfer (negative ΔCE) or interference (positive ΔCE):
 
 ### 2.2 Sketched fingerprints
 
-Storing g(s) (9M floats per prompt) is wasteful; the quantity of interest is inner
-products. We apply **CountSketch**: a fixed random signed-hash projection Φ: R^9M → R^4096,
+Storing g(s) (73M floats per prompt) is wasteful; the quantity of interest is inner
+products. We apply **CountSketch**: a fixed random signed-hash projection Φ: R^73M → R^4096,
 drawn once per model with a fixed seed and shared across all samples, applied per parameter
 tensor and summed. CountSketch is an unbiased inner-product-preserving projection
 (E⟨Φg, Φg'⟩ = ⟨g, g'⟩), so the 4096-dim sketches reproduce the Gram matrix without ever
