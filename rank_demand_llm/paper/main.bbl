@@ -1,0 +1,396 @@
+\begin{thebibliography}{51}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Achille et~al.(2019)Achille, Lam, Tewari, Ravichandran, Maji, Fowlkes,
+  Soatto, and Perona]{achille2019task2vec}
+Alessandro Achille, Michael Lam, Rahul Tewari, Avinash Ravichandran, Subhransu
+  Maji, Charless Fowlkes, Stefano Soatto, and Pietro Perona.
+\newblock {Task2Vec}: Task embedding for meta-learning.
+\newblock In \emph{Proceedings of the IEEE/CVF International Conference on
+  Computer Vision (ICCV)}, 2019.
+
+\bibitem[Arora et~al.(2019)Arora, Du, Hu, Li, Salakhutdinov, and
+  Wang]{arora2019exact}
+Sanjeev Arora, Simon~S. Du, Wei Hu, Zhiyuan Li, Ruslan Salakhutdinov, and
+  Ruosong Wang.
+\newblock On exact computation with an infinitely wide neural net.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, volume~32, 2019.
+
+\bibitem[Austin et~al.(2021)Austin, Odena, Nye, Bosma, Michalewski, Dohan,
+  Jiang, Cai, Terry, Le, and Sutton]{austin2021mbpp}
+Jacob Austin, Augustus Odena, Maxwell Nye, Maarten Bosma, Henryk Michalewski,
+  David Dohan, Ellen Jiang, Carrie Cai, Michael Terry, Quoc Le, and Charles
+  Sutton.
+\newblock Program synthesis with large language models.
+\newblock \emph{arXiv preprint arXiv:2108.07732}, 2021.
+
+\bibitem[Bao et~al.(2019)Bao, Li, Huang, Zhang, Zheng, Zamir, and
+  Guibas]{bao2019hscore}
+Yajie Bao, Yang Li, Shao-Lun Huang, Lin Zhang, Lizhong Zheng, Amir Zamir, and
+  Leonidas~J. Guibas.
+\newblock An information-theoretic approach to transferability in task transfer
+  learning.
+\newblock In \emph{IEEE International Conference on Image Processing (ICIP)},
+  2019.
+
+\bibitem[Charikar et~al.(2002)Charikar, Chen, and
+  Farach-Colton]{charikar2002countsketch}
+Moses Charikar, Kevin Chen, and Martin Farach-Colton.
+\newblock Finding frequent items in data streams.
+\newblock In \emph{International Colloquium on Automata, Languages, and
+  Programming (ICALP)}, pages 693--703, 2002.
+
+\bibitem[Choe et~al.(2024)Choe, Ahn, Bae, Zhao, Kang, Chung, Pratapa,
+  Neiswanger, Strubell, Mitamura, Schneider, Hovy, Grosse, and
+  Xing]{choe2024logra}
+Sang~Keun Choe, Hwijeen Ahn, Juhan Bae, Kewen Zhao, Minsoo Kang, Youngseog
+  Chung, Adithya Pratapa, Willie Neiswanger, Emma Strubell, Teruko Mitamura,
+  Jeff Schneider, Eduard Hovy, Roger Grosse, and Eric Xing.
+\newblock What is your data worth to {GPT}? {LLM}-scale data valuation with
+  influence functions.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, 2024.
+
+\bibitem[Cobbe et~al.(2021)Cobbe, Kosaraju, Bavarian, Chen, Jun, Kaiser,
+  Plappert, Tworek, Hilton, Nakano, Hesse, and Schulman]{cobbe2021gsm8k}
+Karl Cobbe, Vineet Kosaraju, Mohammad Bavarian, Mark Chen, Heewoo Jun, Lukasz
+  Kaiser, Matthias Plappert, Jerry Tworek, Jacob Hilton, Reiichiro Nakano,
+  Christopher Hesse, and John Schulman.
+\newblock Training verifiers to solve math word problems.
+\newblock \emph{arXiv preprint arXiv:2110.14168}, 2021.
+
+\bibitem[Doan et~al.(2021)Doan, Bennani, Mazoure, Rabusseau, and
+  Alquier]{doan2021ntkoverlap}
+Thang Doan, Mehdi~Abbana Bennani, Bogdan Mazoure, Guillaume Rabusseau, and
+  Pierre Alquier.
+\newblock A theoretical analysis of catastrophic forgetting through the {NTK}
+  overlap matrix.
+\newblock In \emph{Proceedings of the 24th International Conference on
+  Artificial Intelligence and Statistics (AISTATS)}, 2021.
+
+\bibitem[Du et~al.(2018)Du, Czarnecki, Jayakumar, Farajtabar, Pascanu, and
+  Lakshminarayanan]{du2018adapting}
+Yunshu Du, Wojciech~M. Czarnecki, Siddhant~M. Jayakumar, Mehrdad Farajtabar,
+  Razvan Pascanu, and Balaji Lakshminarayanan.
+\newblock Adapting auxiliary losses using gradient similarity.
+\newblock \emph{arXiv preprint arXiv:1812.02224}, 2018.
+
+\bibitem[Fifty et~al.(2021)Fifty, Amid, Zhao, Yu, Anil, and Finn]{fifty2021tag}
+Christopher Fifty, Ehsan Amid, Zhe Zhao, Tianhe Yu, Rohan Anil, and Chelsea
+  Finn.
+\newblock Efficiently identifying task groupings for multi-task learning.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, volume~34, 2021.
+
+\bibitem[Fort et~al.(2020)Fort, Dziugaite, Paul, Kharaghani, Roy, and
+  Ganguli]{fort2020deep}
+Stanislav Fort, Gintare~Karolina Dziugaite, Mansheej Paul, Sepideh Kharaghani,
+  Daniel~M. Roy, and Surya Ganguli.
+\newblock Deep learning versus kernel learning: An empirical study of loss
+  landscape geometry and the time evolution of the neural tangent kernel.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, volume~33, 2020.
+
+\bibitem[Grattafiori et~al.(2024)Grattafiori, Dubey, et~al.]{llama3}
+Aaron Grattafiori, Abhimanyu Dubey, et~al.
+\newblock The llama 3 herd of models.
+\newblock \emph{arXiv preprint arXiv:2407.21783}, 2024.
+
+\bibitem[Grosse et~al.(2023)Grosse, Bae, Anil, Elhage, Tamkin, Tajdini,
+  Steiner, Li, Durmus, Perez, Hubinger, Luko{\v{s}}i{\=u}t{\.e}, Nguyen,
+  Joseph, McCandlish, Kaplan, and Bowman]{grosse2023influence}
+Roger Grosse, Juhan Bae, Cem Anil, Nelson Elhage, Alex Tamkin, Amirhossein
+  Tajdini, Benoit Steiner, Dustin Li, Esin Durmus, Ethan Perez, Evan Hubinger,
+  Kamil{\.e} Luko{\v{s}}i{\=u}t{\.e}, Karina Nguyen, Nicholas Joseph, Sam
+  McCandlish, Jared Kaplan, and Samuel~R. Bowman.
+\newblock Studying large language model generalization with influence
+  functions.
+\newblock \emph{arXiv preprint arXiv:2308.03296}, 2023.
+
+\bibitem[Hidekel and Raviv(2026)]{hidekel2026forgetting}
+Ido~Nitzan Hidekel and Dan Raviv.
+\newblock Catastrophic forgetting is low-rank: A function-space theory for
+  continual adaptation.
+\newblock \emph{arXiv preprint arXiv:2606.18024}, 2026.
+
+\bibitem[Hsieh et~al.(2024)Hsieh, Sun, Kriman, Acharya, Rekesh, Jia, Zhang, and
+  Ginsburg]{hsieh2024ruler}
+Cheng-Ping Hsieh, Simeng Sun, Samuel Kriman, Shantanu Acharya, Dima Rekesh, Fei
+  Jia, Yang Zhang, and Boris Ginsburg.
+\newblock {RULER}: What's the real context size of your long-context language
+  models?
+\newblock In \emph{Conference on Language Modeling (COLM)}, 2024.
+
+\bibitem[Huang et~al.(2024)Huang, Cui, Wang, Yang, Liao, Song, Yao, and
+  Su]{huang2024selfsynth}
+Jianheng Huang, Leyang Cui, Ante Wang, Chengyi Yang, Xinting Liao, Linfeng
+  Song, Junfeng Yao, and Jinsong Su.
+\newblock Mitigating catastrophic forgetting in large language models with
+  self-synthesized rehearsal.
+\newblock In \emph{Proceedings of the 62nd Annual Meeting of the Association
+  for Computational Linguistics (ACL)}, 2024.
+
+\bibitem[Ilharco et~al.(2023)Ilharco, Ribeiro, Wortsman, Gururangan, Schmidt,
+  Hajishirzi, and Farhadi]{ilharco2023task}
+Gabriel Ilharco, Marco~Tulio Ribeiro, Mitchell Wortsman, Suchin Gururangan,
+  Ludwig Schmidt, Hannaneh Hajishirzi, and Ali Farhadi.
+\newblock Editing models with task arithmetic.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2023.
+
+\bibitem[Ilyas et~al.(2022)Ilyas, Park, Engstrom, Leclerc, and
+  Madry]{ilyas2022datamodels}
+Andrew Ilyas, Sung~Min Park, Logan Engstrom, Guillaume Leclerc, and Aleksander
+  Madry.
+\newblock Datamodels: Predicting predictions from training data.
+\newblock In \emph{Proceedings of the 39th International Conference on Machine
+  Learning (ICML)}, 2022.
+
+\bibitem[Jacot et~al.(2018)Jacot, Gabriel, and Hongler]{jacot2018ntk}
+Arthur Jacot, Franck Gabriel, and Cl{\'e}ment Hongler.
+\newblock Neural tangent kernel: Convergence and generalization in neural
+  networks.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, volume~31, 2018.
+
+\bibitem[Johnson and Lindenstrauss(1984)]{johnson1984extensions}
+William~B. Johnson and Joram Lindenstrauss.
+\newblock Extensions of {Lipschitz} mappings into a {Hilbert} space.
+\newblock \emph{Contemporary Mathematics}, 26:\penalty0 189--206, 1984.
+
+\bibitem[Kingma and Ba(2015)]{kingma2015adam}
+Diederik~P. Kingma and Jimmy Ba.
+\newblock Adam: A method for stochastic optimization.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2015.
+
+\bibitem[Kirkpatrick et~al.(2017)Kirkpatrick, Pascanu, Rabinowitz, Veness,
+  Desjardins, Rusu, Milan, Quan, Ramalho, Grabska-Barwinska, Hassabis, Clopath,
+  Kumaran, and Hadsell]{kirkpatrick2017ewc}
+James Kirkpatrick, Razvan Pascanu, Neil Rabinowitz, Joel Veness, Guillaume
+  Desjardins, Andrei~A. Rusu, Kieran Milan, John Quan, Tiago Ramalho, Agnieszka
+  Grabska-Barwinska, Demis Hassabis, Claudia Clopath, Dharshan Kumaran, and
+  Raia Hadsell.
+\newblock Overcoming catastrophic forgetting in neural networks.
+\newblock \emph{Proceedings of the National Academy of Sciences (PNAS)},
+  114\penalty0 (13):\penalty0 3521--3526, 2017.
+
+\bibitem[Koh and Liang(2017)]{koh2017influence}
+Pang~Wei Koh and Percy Liang.
+\newblock Understanding black-box predictions via influence functions.
+\newblock In \emph{Proceedings of the 34th International Conference on Machine
+  Learning (ICML)}, 2017.
+
+\bibitem[Kotha et~al.(2024)Kotha, Springer, and
+  Raghunathan]{kotha2024understanding}
+Suhas Kotha, Jacob~Mitchell Springer, and Aditi Raghunathan.
+\newblock Understanding catastrophic forgetting in language models via implicit
+  inference.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2024.
+
+\bibitem[Kwon et~al.(2024)Kwon, Wu, Wu, and Zou]{kwon2024datainf}
+Yongchan Kwon, Eric Wu, Kevin Wu, and James Zou.
+\newblock {DataInf}: Efficiently estimating data influence in {LoRA}-tuned
+  {LLMs} and diffusion models.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2024.
+
+\bibitem[Lee et~al.(2019)Lee, Xiao, Schoenholz, Bahri, Novak, Sohl-Dickstein,
+  and Pennington]{lee2019wide}
+Jaehoon Lee, Lechao Xiao, Samuel~S. Schoenholz, Yasaman Bahri, Roman Novak,
+  Jascha Sohl-Dickstein, and Jeffrey Pennington.
+\newblock Wide neural networks of any depth evolve as linear models under
+  gradient descent.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, volume~32, 2019.
+
+\bibitem[Lee and AlRegib(2020)]{lee2020gradients}
+Jinsol Lee and Ghassan AlRegib.
+\newblock Gradients as a measure of uncertainty in neural networks.
+\newblock In \emph{IEEE International Conference on Image Processing (ICIP)},
+  2020.
+
+\bibitem[Li et~al.(2024)Li, Sharma, and Zhang]{li2024gradtag}
+Dongyue Li, Aneesh Sharma, and Hongyang~R. Zhang.
+\newblock Scalable multitask learning using gradient-based estimation of task
+  affinity.
+\newblock In \emph{Proceedings of the 30th ACM SIGKDD Conference on Knowledge
+  Discovery and Data Mining (KDD)}, 2024.
+
+\bibitem[Luo et~al.(2023)Luo, Yang, Meng, Li, Zhou, and
+  Zhang]{luo2023empirical}
+Yun Luo, Zhen Yang, Fandong Meng, Yafu Li, Jie Zhou, and Yue Zhang.
+\newblock An empirical study of catastrophic forgetting in large language
+  models during continual fine-tuning.
+\newblock \emph{arXiv preprint arXiv:2308.08747}, 2023.
+
+\bibitem[Malladi et~al.(2023)Malladi, Wettig, Yu, Chen, and
+  Arora]{malladi2023kernel}
+Sadhika Malladi, Alexander Wettig, Dingli Yu, Danqi Chen, and Sanjeev Arora.
+\newblock A kernel-based view of language model fine-tuning.
+\newblock In \emph{Proceedings of the 40th International Conference on Machine
+  Learning (ICML)}, 2023.
+
+\bibitem[Mohamadi et~al.(2023)Mohamadi, Bae, and Sutherland]{mohamadi2023entk}
+Mohamad~Amin Mohamadi, Wonho Bae, and Danica~J. Sutherland.
+\newblock A fast, well-founded approximation to the empirical neural tangent
+  kernel.
+\newblock In \emph{Proceedings of the 40th International Conference on Machine
+  Learning (ICML)}, 2023.
+
+\bibitem[Nguyen et~al.(2020)Nguyen, Hassner, Seeger, and
+  Archambeau]{nguyen2020leep}
+Cuong~V. Nguyen, Tal Hassner, Matthias Seeger, and Cedric Archambeau.
+\newblock {LEEP}: A new measure to evaluate transferability of learned
+  representations.
+\newblock In \emph{Proceedings of the 37th International Conference on Machine
+  Learning (ICML)}, 2020.
+
+\bibitem[Novak et~al.(2022)Novak, Sohl-Dickstein, and
+  Schoenholz]{novak2022fast}
+Roman Novak, Jascha Sohl-Dickstein, and Samuel~S. Schoenholz.
+\newblock Fast finite width neural tangent kernel.
+\newblock In \emph{Proceedings of the 39th International Conference on Machine
+  Learning (ICML)}, 2022.
+
+\bibitem[Park et~al.(2023)Park, Georgiev, Ilyas, Leclerc, and
+  Madry]{park2023trak}
+Sung~Min Park, Kristian Georgiev, Andrew Ilyas, Guillaume Leclerc, and
+  Aleksander Madry.
+\newblock {TRAK}: Attributing model behavior at scale.
+\newblock In \emph{Proceedings of the 40th International Conference on Machine
+  Learning (ICML)}, 2023.
+
+\bibitem[Pruthi et~al.(2020)Pruthi, Liu, Kale, and
+  Sundararajan]{pruthi2020tracin}
+Garima Pruthi, Frederick Liu, Satyen Kale, and Mukund Sundararajan.
+\newblock Estimating training data influence by tracing gradient descent.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, volume~33, 2020.
+
+\bibitem[Rahimi~Afzal et~al.(2026)Rahimi~Afzal, Esmaeilbeig, Soltanalian, and
+  Ohannessian]{afzal2026linearization}
+Zahra Rahimi~Afzal, Tara Esmaeilbeig, Mojtaba Soltanalian, and Mesrob~I.
+  Ohannessian.
+\newblock Linearization explains fine-tuning in large language models.
+\newblock \emph{arXiv preprint arXiv:2602.08239}, 2026.
+
+\bibitem[Rajpurkar et~al.(2016)Rajpurkar, Zhang, Lopyrev, and
+  Liang]{rajpurkar2016squad}
+Pranav Rajpurkar, Jian Zhang, Konstantin Lopyrev, and Percy Liang.
+\newblock {SQuAD}: 100,000+ questions for machine comprehension of text.
+\newblock In \emph{Proceedings of the 2016 Conference on Empirical Methods in
+  Natural Language Processing (EMNLP)}, pages 2383--2392, 2016.
+
+\bibitem[Ramasesh et~al.(2021)Ramasesh, Dyer, and Raghu]{ramasesh2021anatomy}
+Vinay~V. Ramasesh, Ethan Dyer, and Maithra Raghu.
+\newblock Anatomy of catastrophic forgetting: Hidden representations and task
+  semantics.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2021.
+
+\bibitem[Scialom et~al.(2022)Scialom, Chakrabarty, and
+  Muresan]{scialom2022finetuned}
+Thomas Scialom, Tuhin Chakrabarty, and Smaranda Muresan.
+\newblock Fine-tuned language models are continual learners.
+\newblock In \emph{Proceedings of the 2022 Conference on Empirical Methods in
+  Natural Language Processing (EMNLP)}, 2022.
+
+\bibitem[Standley et~al.(2020)Standley, Zamir, Chen, Guibas, Malik, and
+  Savarese]{standley2020which}
+Trevor Standley, Amir~R. Zamir, Dawn Chen, Leonidas Guibas, Jitendra Malik, and
+  Silvio Savarese.
+\newblock Which tasks should be learned together in multi-task learning?
+\newblock In \emph{Proceedings of the 37th International Conference on Machine
+  Learning (ICML)}, 2020.
+
+\bibitem[Team(2024)]{qwen2p5}
+Qwen Team.
+\newblock Qwen2.5 technical report.
+\newblock \emph{arXiv preprint arXiv:2412.15115}, 2024.
+
+\bibitem[Toneva et~al.(2019)Toneva, Sordoni, Tachet~des Combes, Trischler,
+  Bengio, and Gordon]{toneva2019empirical}
+Mariya Toneva, Alessandro Sordoni, Remi Tachet~des Combes, Adam Trischler,
+  Yoshua Bengio, and Geoffrey~J. Gordon.
+\newblock An empirical study of example forgetting during deep neural network
+  learning.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2019.
+
+\bibitem[Vu et~al.(2020)Vu, Wang, Munkhdalai, Sordoni, Trischler,
+  Mattarella-Micke, Maji, and Iyyer]{vu2020exploring}
+Tu~Vu, Tong Wang, Tsendsuren Munkhdalai, Alessandro Sordoni, Adam Trischler,
+  Andrew Mattarella-Micke, Subhransu Maji, and Mohit Iyyer.
+\newblock Exploring and predicting transferability across {NLP} tasks.
+\newblock In \emph{Proceedings of the 2020 Conference on Empirical Methods in
+  Natural Language Processing (EMNLP)}, 2020.
+
+\bibitem[Wang et~al.(2026)Wang, Liu, Liao, Fan, Du, Tang, Wang, and
+  Wang]{wang2026ntkselector}
+Pingjie Wang, Hongcheng Liu, Yusheng Liao, Ziqing Fan, Yaxin Du, Shuo Tang,
+  Yanfeng Wang, and Yu~Wang.
+\newblock Mining useful general data for low-resource domain adaptation via
+  neural tangent kernels.
+\newblock \emph{arXiv preprint arXiv:2511.07380}, 2026.
+
+\bibitem[Wang et~al.(2021)Wang, Tsvetkov, Firat, and Cao]{wang2021gradvaccine}
+Zirui Wang, Yulia Tsvetkov, Orhan Firat, and Yuan Cao.
+\newblock Gradient vaccine: Investigating and improving multi-task optimization
+  in massively multilingual models.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2021.
+
+\bibitem[Weinberger et~al.(2009)Weinberger, Dasgupta, Attenberg, Langford, and
+  Smola]{weinberger2009feature}
+Kilian Weinberger, Anirban Dasgupta, Josh Attenberg, John Langford, and Alex
+  Smola.
+\newblock Feature hashing for large scale multitask learning.
+\newblock In \emph{Proceedings of the 26th International Conference on Machine
+  Learning (ICML)}, 2009.
+
+\bibitem[Xia et~al.(2024)Xia, Malladi, Gururangan, Arora, and
+  Chen]{xia2024less}
+Mengzhou Xia, Sadhika Malladi, Suchin Gururangan, Sanjeev Arora, and Danqi
+  Chen.
+\newblock {LESS}: Selecting influential data for targeted instruction tuning.
+\newblock In \emph{Proceedings of the 41st International Conference on Machine
+  Learning (ICML)}, 2024.
+
+\bibitem[Yadav et~al.(2023)Yadav, Tam, Choshen, Raffel, and
+  Bansal]{yadav2023ties}
+Prateek Yadav, Derek Tam, Leshem Choshen, Colin Raffel, and Mohit Bansal.
+\newblock {TIES-Merging}: Resolving interference when merging models.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, volume~36, 2023.
+
+\bibitem[You et~al.(2021)You, Liu, Wang, and Long]{you2021logme}
+Kaichao You, Yong Liu, Jianmin Wang, and Mingsheng Long.
+\newblock {LogME}: Practical assessment of pre-trained models for transfer
+  learning.
+\newblock In \emph{Proceedings of the 38th International Conference on Machine
+  Learning (ICML)}, 2021.
+
+\bibitem[Yu et~al.(2020)Yu, Kumar, Gupta, Levine, Hausman, and
+  Finn]{yu2020pcgrad}
+Tianhe Yu, Saurabh Kumar, Abhishek Gupta, Sergey Levine, Karol Hausman, and
+  Chelsea Finn.
+\newblock Gradient surgery for multi-task learning.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, volume~33, 2020.
+
+\bibitem[Zamir et~al.(2018)Zamir, Sax, Shen, Guibas, Malik, and
+  Savarese]{zamir2018taskonomy}
+Amir~R. Zamir, Alexander Sax, William Shen, Leonidas~J. Guibas, Jitendra Malik,
+  and Silvio Savarese.
+\newblock Taskonomy: Disentangling task transfer learning.
+\newblock In \emph{Proceedings of the IEEE Conference on Computer Vision and
+  Pattern Recognition (CVPR)}, 2018.
+
+\end{thebibliography}

@@ -1,0 +1,461 @@
+% references.bib -- verified BibTeX for the Related Work section of
+% "Sketched Empirical-NTK Capability Fingerprints Predict Fine-Tuning
+%  Transfer and Interference in LLMs".
+%
+% Every entry below was verified against arXiv / OpenReview / PMLR / ACL
+% Anthology / official proceedings during the literature review (July 2026).
+% Keys are chosen to match paper/references_main.bib for clean merging.
+
+% =====================================================================
+%  NTK / linearized fine-tuning
+% =====================================================================
+
+@inproceedings{jacot2018ntk,
+  title     = {Neural Tangent Kernel: Convergence and Generalization in Neural Networks},
+  author    = {Jacot, Arthur and Gabriel, Franck and Hongler, Cl{\'e}ment},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  volume    = {31},
+  year      = {2018}
+}
+
+@inproceedings{lee2019wide,
+  title     = {Wide Neural Networks of Any Depth Evolve as Linear Models Under Gradient Descent},
+  author    = {Lee, Jaehoon and Xiao, Lechao and Schoenholz, Samuel S. and Bahri, Yasaman and Novak, Roman and Sohl-Dickstein, Jascha and Pennington, Jeffrey},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  volume    = {32},
+  year      = {2019}
+}
+
+@inproceedings{arora2019exact,
+  title     = {On Exact Computation with an Infinitely Wide Neural Net},
+  author    = {Arora, Sanjeev and Du, Simon S. and Hu, Wei and Li, Zhiyuan and Salakhutdinov, Ruslan and Wang, Ruosong},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  volume    = {32},
+  year      = {2019}
+}
+
+@inproceedings{fort2020deep,
+  title     = {Deep Learning versus Kernel Learning: An Empirical Study of Loss Landscape Geometry and the Time Evolution of the Neural Tangent Kernel},
+  author    = {Fort, Stanislav and Dziugaite, Gintare Karolina and Paul, Mansheej and Kharaghani, Sepideh and Roy, Daniel M. and Ganguli, Surya},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  volume    = {33},
+  year      = {2020}
+}
+
+@inproceedings{novak2022fast,
+  title     = {Fast Finite Width Neural Tangent Kernel},
+  author    = {Novak, Roman and Sohl-Dickstein, Jascha and Schoenholz, Samuel S.},
+  booktitle = {Proceedings of the 39th International Conference on Machine Learning (ICML)},
+  year      = {2022}
+}
+
+@inproceedings{mohamadi2023entk,
+  title     = {A Fast, Well-Founded Approximation to the Empirical Neural Tangent Kernel},
+  author    = {Mohamadi, Mohamad Amin and Bae, Wonho and Sutherland, Danica J.},
+  booktitle = {Proceedings of the 40th International Conference on Machine Learning (ICML)},
+  year      = {2023}
+}
+
+@inproceedings{malladi2023kernel,
+  title     = {A Kernel-Based View of Language Model Fine-Tuning},
+  author    = {Malladi, Sadhika and Wettig, Alexander and Yu, Dingli and Chen, Danqi and Arora, Sanjeev},
+  booktitle = {Proceedings of the 40th International Conference on Machine Learning (ICML)},
+  year      = {2023}
+}
+
+@article{afzal2026linearization,
+  title   = {Linearization Explains Fine-Tuning in Large Language Models},
+  author  = {Rahimi Afzal, Zahra and Esmaeilbeig, Tara and Soltanalian, Mojtaba and Ohannessian, Mesrob I.},
+  journal = {arXiv preprint arXiv:2602.08239},
+  year    = {2026}
+}
+
+% =====================================================================
+%  Gradient-based data attribution & influence
+% =====================================================================
+
+@inproceedings{koh2017influence,
+  title     = {Understanding Black-box Predictions via Influence Functions},
+  author    = {Koh, Pang Wei and Liang, Percy},
+  booktitle = {Proceedings of the 34th International Conference on Machine Learning (ICML)},
+  year      = {2017}
+}
+
+@inproceedings{pruthi2020tracin,
+  title     = {Estimating Training Data Influence by Tracing Gradient Descent},
+  author    = {Pruthi, Garima and Liu, Frederick and Kale, Satyen and Sundararajan, Mukund},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  volume    = {33},
+  year      = {2020}
+}
+
+@inproceedings{park2023trak,
+  title     = {{TRAK}: Attributing Model Behavior at Scale},
+  author    = {Park, Sung Min and Georgiev, Kristian and Ilyas, Andrew and Leclerc, Guillaume and Madry, Aleksander},
+  booktitle = {Proceedings of the 40th International Conference on Machine Learning (ICML)},
+  year      = {2023}
+}
+
+@article{grosse2023influence,
+  title   = {Studying Large Language Model Generalization with Influence Functions},
+  author  = {Grosse, Roger and Bae, Juhan and Anil, Cem and Elhage, Nelson and Tamkin, Alex and Tajdini, Amirhossein and Steiner, Benoit and Li, Dustin and Durmus, Esin and Perez, Ethan and Hubinger, Evan and Luko{\v{s}}i{\=u}t{\.e}, Kamil{\.e} and Nguyen, Karina and Joseph, Nicholas and McCandlish, Sam and Kaplan, Jared and Bowman, Samuel R.},
+  journal = {arXiv preprint arXiv:2308.03296},
+  year    = {2023}
+}
+
+@inproceedings{choe2024logra,
+  title     = {What is Your Data Worth to {GPT}? {LLM}-Scale Data Valuation with Influence Functions},
+  author    = {Choe, Sang Keun and Ahn, Hwijeen and Bae, Juhan and Zhao, Kewen and Kang, Minsoo and Chung, Youngseog and Pratapa, Adithya and Neiswanger, Willie and Strubell, Emma and Mitamura, Teruko and Schneider, Jeff and Hovy, Eduard and Grosse, Roger and Xing, Eric},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2024}
+}
+
+@inproceedings{kwon2024datainf,
+  title     = {{DataInf}: Efficiently Estimating Data Influence in {LoRA}-tuned {LLMs} and Diffusion Models},
+  author    = {Kwon, Yongchan and Wu, Eric and Wu, Kevin and Zou, James},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2024}
+}
+
+@inproceedings{ilyas2022datamodels,
+  title     = {Datamodels: Predicting Predictions from Training Data},
+  author    = {Ilyas, Andrew and Park, Sung Min and Engstrom, Logan and Leclerc, Guillaume and Madry, Aleksander},
+  booktitle = {Proceedings of the 39th International Conference on Machine Learning (ICML)},
+  year      = {2022}
+}
+
+@inproceedings{engstrom2024dsdm,
+  title     = {{DsDm}: Model-Aware Dataset Selection with Datamodels},
+  author    = {Engstrom, Logan and Feldmann, Axel and Madry, Aleksander},
+  booktitle = {Proceedings of the 41st International Conference on Machine Learning (ICML)},
+  year      = {2024}
+}
+
+@inproceedings{mirzasoleiman2020craig,
+  title     = {Coresets for Data-efficient Training of Machine Learning Models},
+  author    = {Mirzasoleiman, Baharan and Bilmes, Jeff and Leskovec, Jure},
+  booktitle = {Proceedings of the 37th International Conference on Machine Learning (ICML)},
+  year      = {2020}
+}
+
+@inproceedings{killamsetty2021gradmatch,
+  title     = {{GRAD-MATCH}: Gradient Matching based Data Subset Selection for Efficient Deep Model Training},
+  author    = {Killamsetty, Krishnateja and Sivasubramanian, Durga and Ramakrishnan, Ganesh and De, Abir and Iyer, Rishabh},
+  booktitle = {Proceedings of the 38th International Conference on Machine Learning (ICML)},
+  year      = {2021}
+}
+
+% =====================================================================
+%  Gradient-based data selection & transferability estimation
+% =====================================================================
+
+@inproceedings{xia2024less,
+  title     = {{LESS}: Selecting Influential Data for Targeted Instruction Tuning},
+  author    = {Xia, Mengzhou and Malladi, Sadhika and Gururangan, Suchin and Arora, Sanjeev and Chen, Danqi},
+  booktitle = {Proceedings of the 41st International Conference on Machine Learning (ICML)},
+  year      = {2024}
+}
+
+@inproceedings{li2024gradtag,
+  title     = {Scalable Multitask Learning Using Gradient-based Estimation of Task Affinity},
+  author    = {Li, Dongyue and Sharma, Aneesh and Zhang, Hongyang R.},
+  booktitle = {Proceedings of the 30th ACM SIGKDD Conference on Knowledge Discovery and Data Mining (KDD)},
+  year      = {2024}
+}
+
+@inproceedings{fifty2021tag,
+  title     = {Efficiently Identifying Task Groupings for Multi-Task Learning},
+  author    = {Fifty, Christopher and Amid, Ehsan and Zhao, Zhe and Yu, Tianhe and Anil, Rohan and Finn, Chelsea},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  volume    = {34},
+  year      = {2021}
+}
+
+@inproceedings{standley2020which,
+  title     = {Which Tasks Should Be Learned Together in Multi-Task Learning?},
+  author    = {Standley, Trevor and Zamir, Amir R. and Chen, Dawn and Guibas, Leonidas and Malik, Jitendra and Savarese, Silvio},
+  booktitle = {Proceedings of the 37th International Conference on Machine Learning (ICML)},
+  year      = {2020}
+}
+
+@inproceedings{achille2019task2vec,
+  title     = {{Task2Vec}: Task Embedding for Meta-Learning},
+  author    = {Achille, Alessandro and Lam, Michael and Tewari, Rahul and Ravichandran, Avinash and Maji, Subhransu and Fowlkes, Charless and Soatto, Stefano and Perona, Pietro},
+  booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+  year      = {2019}
+}
+
+@inproceedings{vu2020exploring,
+  title     = {Exploring and Predicting Transferability across {NLP} Tasks},
+  author    = {Vu, Tu and Wang, Tong and Munkhdalai, Tsendsuren and Sordoni, Alessandro and Trischler, Adam and Mattarella-Micke, Andrew and Maji, Subhransu and Iyyer, Mohit},
+  booktitle = {Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP)},
+  year      = {2020}
+}
+
+@inproceedings{nguyen2020leep,
+  title     = {{LEEP}: A New Measure to Evaluate Transferability of Learned Representations},
+  author    = {Nguyen, Cuong V. and Hassner, Tal and Seeger, Matthias and Archambeau, Cedric},
+  booktitle = {Proceedings of the 37th International Conference on Machine Learning (ICML)},
+  year      = {2020}
+}
+
+@inproceedings{you2021logme,
+  title     = {{LogME}: Practical Assessment of Pre-trained Models for Transfer Learning},
+  author    = {You, Kaichao and Liu, Yong and Wang, Jianmin and Long, Mingsheng},
+  booktitle = {Proceedings of the 38th International Conference on Machine Learning (ICML)},
+  year      = {2021}
+}
+
+@inproceedings{bao2019hscore,
+  title     = {An Information-Theoretic Approach to Transferability in Task Transfer Learning},
+  author    = {Bao, Yajie and Li, Yang and Huang, Shao-Lun and Zhang, Lin and Zheng, Lizhong and Zamir, Amir and Guibas, Leonidas J.},
+  booktitle = {IEEE International Conference on Image Processing (ICIP)},
+  year      = {2019}
+}
+
+@inproceedings{zamir2018taskonomy,
+  title     = {Taskonomy: Disentangling Task Transfer Learning},
+  author    = {Zamir, Amir R. and Sax, Alexander and Shen, William and Guibas, Leonidas J. and Malik, Jitendra and Savarese, Silvio},
+  booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+  year      = {2018}
+}
+
+@article{wang2026ntkselector,
+  title   = {Mining Useful General Data for Low-Resource Domain Adaptation via Neural Tangent Kernels},
+  author  = {Wang, Pingjie and Liu, Hongcheng and Liao, Yusheng and Fan, Ziqing and Du, Yaxin and Tang, Shuo and Wang, Yanfeng and Wang, Yu},
+  journal = {arXiv preprint arXiv:2511.07380},
+  year    = {2026}
+}
+
+% =====================================================================
+%  Catastrophic forgetting & task interference
+% =====================================================================
+
+@article{kirkpatrick2017ewc,
+  title   = {Overcoming Catastrophic Forgetting in Neural Networks},
+  author  = {Kirkpatrick, James and Pascanu, Razvan and Rabinowitz, Neil and Veness, Joel and Desjardins, Guillaume and Rusu, Andrei A. and Milan, Kieran and Quan, John and Ramalho, Tiago and Grabska-Barwinska, Agnieszka and Hassabis, Demis and Clopath, Claudia and Kumaran, Dharshan and Hadsell, Raia},
+  journal = {Proceedings of the National Academy of Sciences (PNAS)},
+  volume  = {114},
+  number  = {13},
+  pages   = {3521--3526},
+  year    = {2017}
+}
+
+@article{luo2023empirical,
+  title   = {An Empirical Study of Catastrophic Forgetting in Large Language Models During Continual Fine-tuning},
+  author  = {Luo, Yun and Yang, Zhen and Meng, Fandong and Li, Yafu and Zhou, Jie and Zhang, Yue},
+  journal = {arXiv preprint arXiv:2308.08747},
+  year    = {2023}
+}
+
+@inproceedings{kotha2024understanding,
+  title     = {Understanding Catastrophic Forgetting in Language Models via Implicit Inference},
+  author    = {Kotha, Suhas and Springer, Jacob Mitchell and Raghunathan, Aditi},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2024}
+}
+
+@inproceedings{toneva2019empirical,
+  title     = {An Empirical Study of Example Forgetting during Deep Neural Network Learning},
+  author    = {Toneva, Mariya and Sordoni, Alessandro and Tachet des Combes, Remi and Trischler, Adam and Bengio, Yoshua and Gordon, Geoffrey J.},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2019}
+}
+
+@inproceedings{doan2021ntkoverlap,
+  title     = {A Theoretical Analysis of Catastrophic Forgetting through the {NTK} Overlap Matrix},
+  author    = {Doan, Thang and Bennani, Mehdi Abbana and Mazoure, Bogdan and Rabusseau, Guillaume and Alquier, Pierre},
+  booktitle = {Proceedings of the 24th International Conference on Artificial Intelligence and Statistics (AISTATS)},
+  year      = {2021}
+}
+
+@inproceedings{ramasesh2021anatomy,
+  title     = {Anatomy of Catastrophic Forgetting: Hidden Representations and Task Semantics},
+  author    = {Ramasesh, Vinay V. and Dyer, Ethan and Raghu, Maithra},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2021}
+}
+
+@inproceedings{scialom2022finetuned,
+  title     = {Fine-tuned Language Models are Continual Learners},
+  author    = {Scialom, Thomas and Chakrabarty, Tuhin and Muresan, Smaranda},
+  booktitle = {Proceedings of the 2022 Conference on Empirical Methods in Natural Language Processing (EMNLP)},
+  year      = {2022}
+}
+
+@inproceedings{huang2024selfsynth,
+  title     = {Mitigating Catastrophic Forgetting in Large Language Models with Self-Synthesized Rehearsal},
+  author    = {Huang, Jianheng and Cui, Leyang and Wang, Ante and Yang, Chengyi and Liao, Xinting and Song, Linfeng and Yao, Junfeng and Su, Jinsong},
+  booktitle = {Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (ACL)},
+  year      = {2024}
+}
+
+@article{hidekel2026forgetting,
+  title   = {Catastrophic Forgetting is Low-Rank: A Function-Space Theory for Continual Adaptation},
+  author  = {Hidekel, Ido Nitzan and Raviv, Dan},
+  journal = {arXiv preprint arXiv:2606.18024},
+  year    = {2026}
+}
+
+% -- Task vectors / model merging interference --
+
+@inproceedings{ilharco2023task,
+  title     = {Editing Models with Task Arithmetic},
+  author    = {Ilharco, Gabriel and Ribeiro, Marco Tulio and Wortsman, Mitchell and Gururangan, Suchin and Schmidt, Ludwig and Hajishirzi, Hannaneh and Farhadi, Ali},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2023}
+}
+
+@inproceedings{yadav2023ties,
+  title     = {{TIES-Merging}: Resolving Interference When Merging Models},
+  author    = {Yadav, Prateek and Tam, Derek and Choshen, Leshem and Raffel, Colin and Bansal, Mohit},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  volume    = {36},
+  year      = {2023}
+}
+
+% -- Gradient conflict in multi-task learning --
+
+@inproceedings{yu2020pcgrad,
+  title     = {Gradient Surgery for Multi-Task Learning},
+  author    = {Yu, Tianhe and Kumar, Saurabh and Gupta, Abhishek and Levine, Sergey and Hausman, Karol and Finn, Chelsea},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  volume    = {33},
+  year      = {2020}
+}
+
+@inproceedings{wang2021gradvaccine,
+  title     = {Gradient Vaccine: Investigating and Improving Multi-task Optimization in Massively Multilingual Models},
+  author    = {Wang, Zirui and Tsvetkov, Yulia and Firat, Orhan and Cao, Yuan},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2021}
+}
+
+@article{du2018adapting,
+  title   = {Adapting Auxiliary Losses Using Gradient Similarity},
+  author  = {Du, Yunshu and Czarnecki, Wojciech M. and Jayakumar, Siddhant M. and Farajtabar, Mehrdad and Pascanu, Razvan and Lakshminarayanan, Balaji},
+  journal = {arXiv preprint arXiv:1812.02224},
+  year    = {2018}
+}
+
+% =====================================================================
+%  Sketching / random projection
+% =====================================================================
+
+@inproceedings{charikar2002countsketch,
+  title     = {Finding Frequent Items in Data Streams},
+  author    = {Charikar, Moses and Chen, Kevin and Farach-Colton, Martin},
+  booktitle = {International Colloquium on Automata, Languages, and Programming (ICALP)},
+  pages     = {693--703},
+  year      = {2002}
+}
+
+@article{johnson1984extensions,
+  title   = {Extensions of {Lipschitz} Mappings into a {Hilbert} Space},
+  author  = {Johnson, William B. and Lindenstrauss, Joram},
+  journal = {Contemporary Mathematics},
+  volume  = {26},
+  pages   = {189--206},
+  year    = {1984}
+}
+
+@inproceedings{weinberger2009feature,
+  title     = {Feature Hashing for Large Scale Multitask Learning},
+  author    = {Weinberger, Kilian and Dasgupta, Anirban and Attenberg, Josh and Langford, John and Smola, Alex},
+  booktitle = {Proceedings of the 26th International Conference on Machine Learning (ICML)},
+  year      = {2009}
+}
+
+% =====================================================================
+%  Gradients as uncertainty (self-gradient null)
+% =====================================================================
+
+@inproceedings{lee2020gradients,
+  title     = {Gradients as a Measure of Uncertainty in Neural Networks},
+  author    = {Lee, Jinsol and AlRegib, Ghassan},
+  booktitle = {IEEE International Conference on Image Processing (ICIP)},
+  year      = {2020}
+}
+
+% =====================================================================
+%  Experimental setup: models, benchmarks, optimizers
+% =====================================================================
+
+@inproceedings{hsieh2024ruler,
+  title     = {{RULER}: What's the Real Context Size of Your Long-Context Language Models?},
+  author    = {Hsieh, Cheng-Ping and Sun, Simeng and Kriman, Samuel and Acharya, Shantanu and Rekesh, Dima and Jia, Fei and Zhang, Yang and Ginsburg, Boris},
+  booktitle = {Conference on Language Modeling (COLM)},
+  year      = {2024}
+}
+
+@article{qwen2p5,
+  title   = {Qwen2.5 Technical Report},
+  author  = {Qwen Team},
+  journal = {arXiv preprint arXiv:2412.15115},
+  year    = {2024}
+}
+
+@article{llama3,
+  title   = {The Llama 3 Herd of Models},
+  author  = {Grattafiori, Aaron and Dubey, Abhimanyu and others},
+  journal = {arXiv preprint arXiv:2407.21783},
+  year    = {2024}
+}
+
+@article{cobbe2021gsm8k,
+  title   = {Training Verifiers to Solve Math Word Problems},
+  author  = {Cobbe, Karl and Kosaraju, Vineet and Bavarian, Mohammad and Chen, Mark and Jun, Heewoo and Kaiser, Lukasz and Plappert, Matthias and Tworek, Jerry and Hilton, Jacob and Nakano, Reiichiro and Hesse, Christopher and Schulman, John},
+  journal = {arXiv preprint arXiv:2110.14168},
+  year    = {2021}
+}
+
+@article{austin2021mbpp,
+  title   = {Program Synthesis with Large Language Models},
+  author  = {Austin, Jacob and Odena, Augustus and Nye, Maxwell and Bosma, Maarten and Michalewski, Henryk and Dohan, David and Jiang, Ellen and Cai, Carrie and Terry, Michael and Le, Quoc and Sutton, Charles},
+  journal = {arXiv preprint arXiv:2108.07732},
+  year    = {2021}
+}
+
+@inproceedings{rajpurkar2016squad,
+  title     = {{SQuAD}: 100,000+ Questions for Machine Comprehension of Text},
+  author    = {Rajpurkar, Pranav and Zhang, Jian and Lopyrev, Konstantin and Liang, Percy},
+  booktitle = {Proceedings of the 2016 Conference on Empirical Methods in Natural Language Processing (EMNLP)},
+  pages     = {2383--2392},
+  year      = {2016}
+}
+
+@inproceedings{artetxe2020xquad,
+  title     = {On the Cross-lingual Transferability of Monolingual Representations},
+  author    = {Artetxe, Mikel and Ruder, Sebastian and Yogatama, Dani},
+  booktitle = {Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics (ACL)},
+  pages     = {4623--4637},
+  year      = {2020}
+}
+
+@article{clark2018arc,
+  title   = {Think You Have Solved Question Answering? Try {ARC}, the {AI2} Reasoning Challenge},
+  author  = {Clark, Peter and Cowhey, Isaac and Etzioni, Oren and Khot, Tushar and Sabharwal, Ashish and Schoenick, Carissa and Tafjord, Oyvind},
+  journal = {arXiv preprint arXiv:1803.05457},
+  year    = {2018}
+}
+
+@article{bai2022hhrlhf,
+  title   = {Training a Helpful and Harmless Assistant with Reinforcement Learning from Human Feedback},
+  author  = {Bai, Yuntao and Jones, Andy and Ndousse, Kamal and Askell, Amanda and Chen, Anna and DasSarma, Nova and Drain, Dawn and Fort, Stanislav and Ganguli, Deep and Henighan, Tom and others},
+  journal = {arXiv preprint arXiv:2204.05862},
+  year    = {2022}
+}
+
+@inproceedings{hu2022lora,
+  title     = {{LoRA}: Low-Rank Adaptation of Large Language Models},
+  author    = {Hu, Edward J. and Shen, Yelong and Wallis, Phillip and Allen-Zhu, Zeyuan and Li, Yuanzhi and Wang, Shean and Wang, Lu and Chen, Weizhu},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2022}
+}
+
+@inproceedings{kingma2015adam,
+  title     = {Adam: A Method for Stochastic Optimization},
+  author    = {Kingma, Diederik P. and Ba, Jimmy},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2015}
+}

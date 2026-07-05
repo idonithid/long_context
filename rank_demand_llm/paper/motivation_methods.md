@@ -74,7 +74,8 @@ context lengths 1k–8k, with 1,000 samples per model:
 In the same runs we computed per-prompt empirical-NTK features — gradients of the
 teacher-forced answer loss, compressed by CountSketch. These showed the structure the
 activation-space metrics lacked: self-kernel norms span ~600–790× across families;
-within-family gradient cosine similarity is 0.41–0.44 versus 0.04–0.05 across families,
+within-family gradient cosine similarity is 0.21 (Qwen, all lengths; 0.44 at ≤2k) / 0.41
+(Llama) versus 0.02–0.05 across families,
 in both models. Prompts from the same capability occupy a tight cone in gradient space;
 different capabilities are nearly orthogonal.
 

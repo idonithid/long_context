@@ -1,0 +1,92 @@
+\section{Related Work}
+\label{sec:related}
+
+\paragraph{NTK and linearized fine-tuning.}
+The neural tangent kernel~\citep{jacot2018ntk} shows that sufficiently wide networks
+train as their first-order Taylor expansion about initialization, with dynamics governed
+by a fixed gradient-inner-product kernel~\citep{lee2019wide,arora2019exact}; the
+\emph{empirical} NTK measured at finite width is a widely used practical surrogate,
+and fast approximations make it computable for large models~\citep{novak2022fast,mohamadi2023entk,fort2020deep}.
+Closest to us, \citet{malladi2023kernel} extend this lens to \emph{fine-tuning} pretrained
+language models, arguing (and empirically verifying, including an extension to Adam via
+Tensor Programs) that fine-tuning frequently behaves kernel-like, and a recent theoretical
+line makes the linearization argument explicit for LLMs~\citep{afzal2026linearization}.
+These works establish \emph{that} an eNTK describes LLM fine-tuning on a single task. We take
+the complementary, constructive step: we \emph{use} the eNTK predictively \emph{across}
+capabilities, turning the first-order transfer identity
+$\Delta L(s_j)\approx-\eta\langle g(s_i),g(s_j)\rangle$ into a pre-training-time forecast of
+which held-out capabilities a candidate fine-tuning set will improve or damage, validated
+against \emph{measured} $\Delta$CE at 7--8B scale.
+
+\paragraph{Gradient-based data attribution and influence.}
+Influence functions attribute a model's behavior to individual training points via
+gradient and inverse-Hessian information~\citep{koh2017influence}, with scalable variants
+that trace gradient descent~\citep{pruthi2020tracin}, exploit random projections of
+per-example gradients~\citep{park2023trak}, or approximate the inverse Hessian for
+LLM-scale valuation~\citep{grosse2023influence,choe2024logra,kwon2024datainf,ilyas2022datamodels}.
+This literature is \emph{backward-looking}: it explains the predictions of a model that has
+\emph{already} been trained, and typically requires a per-query solve or Hessian
+approximation. Our object differs in three ways: (i) we predict the effect of \emph{future}
+fine-tuning from \emph{base-model} gradients, before any training; (ii) we need no Hessian
+inversion or optimizer trajectory---a single fixed CountSketch per prompt supports all
+future capability pairings; and (iii) our unit of prediction is a \emph{capability
+distribution}, not an individual training point, yielding a full transfer/interference
+matrix.
+
+\paragraph{Gradient-based data selection and transferability estimation.}
+The machinery closest to ours appears in gradient-based data selection.
+\textsc{Less}~\citep{xia2024less} selects instruction-tuning data by projecting
+optimizer-aware (Adam) gradients collected \emph{along a training trajectory} and matching
+them to a \emph{fixed target task}; NTK-Selector~\citep{wang2026ntkselector} concurrently
+uses random-projected NTK scores at initialization to mine auxiliary data for a
+\emph{single} low-resource domain. We share the low-dimensional gradient-feature idea but
+differ in goal and validation: rather than ranking data for one target, we predict the
+\emph{entire} cross-capability transfer \emph{and} interference matrix from base-model
+gradients and check it against measured $\Delta$CE, including the case where the trained
+parameters (all-layer LoRA) are \emph{disjoint} from the sketched subset. A parallel thread
+estimates \emph{task affinity} from gradients for multi-task grouping---TAG measures how one
+task's gradient step changes another's loss~\citep{fifty2021tag}, Grad-TAG fits a logistic
+surrogate on projected gradients to predict combined-task loss~\citep{li2024gradtag}, and
+earlier work groups tasks by cooperation/competition~\citep{standley2020which}---but these
+target \emph{which tasks to co-train} (positive transfer for grouping), operate during or
+across training runs, and are demonstrated below LLM scale. Transferability metrics such as
+Task2Vec~\citep{achille2019task2vec}, TaskEmb~\citep{vu2020exploring},
+LEEP~\citep{nguyen2020leep}, LogME~\citep{you2021logme}, and the
+H-score~\citep{bao2019hscore,zamir2018taskonomy} likewise \emph{embed} tasks or score
+source-model reusability; notably Task2Vec fingerprints a task with Fisher-weighted
+gradients, but for meta-learning similarity---it does not predict a measured fine-tuning
+$\Delta$CE transfer matrix, and uses a different gradient object than our pairwise eNTK
+inner products.
+
+\paragraph{Forgetting and task interference.}
+Fine-tuning LLMs degrades pretraining capabilities~\citep{luo2023empirical,kotha2024understanding},
+extending classic studies of forgetting~\citep{kirkpatrick2017ewc,toneva2019empirical}, and
+is commonly mitigated by regularization or rehearsal/replay~\citep{scialom2022finetuned,huang2024selfsynth}.
+In weight space, task vectors interfere when models are merged, motivating sign- and
+magnitude-based conflict resolution~\citep{ilharco2023task,yadav2023ties}; in gradient space,
+multi-task optimization identifies conflicting (negatively aligned) gradients and surgically
+removes the conflict~\citep{yu2020pcgrad,wang2021gradvaccine,du2018adapting}. The work
+theoretically nearest to our interference claim is \citet{doan2021ntkoverlap}, who show that
+catastrophic forgetting between two tasks grows with their NTK overlap and formalize task
+similarity through an NTK overlap matrix, complemented by representational analyses of what
+drives forgetting~\citep{ramasesh2021anatomy}. That line is theoretical, is developed for
+two-task continual learning in vision, and prescribes an \emph{intervention} (orthogonal
+gradient descent) rather than a validated quantitative forecast. We instead \emph{measure}
+the full signed transfer/interference matrix induced by real fine-tuning of a 7--8B LLM and
+show that a cheap sketched-eNTK kernel predicts it---capturing both damage (positive
+$\Delta$CE) and benefit (negative $\Delta$CE), across heterogeneous real capabilities and two
+model families---which in turn enables rehearsal targeting. This complements our companion
+function-space analysis of when such forgetting is low-rank~\citep{hidekel2026forgetting}.
+
+\paragraph{Sketching gradients.}
+We compress each gradient with CountSketch~\citep{charikar2002countsketch}, an unbiased
+inner-product-preserving projection in the Johnson--Lindenstrauss family~\citep{johnson1984extensions}
+also known as the hashing trick~\citep{weinberger2009feature}; the same random-projection
+principle underlies gradient attribution~\citep{park2023trak} and selection~\citep{xia2024less}.
+Our use is distinctive in that one fixed sketch per prompt is reused across \emph{all}
+capability pairings to reconstruct the Gram matrix without ever materializing gradients.
+Finally, we report an honest negative result: the \emph{norm} of a self-generated answer's
+gradient---a natural test-time confidence signal in the spirit of gradient-based
+uncertainty~\citep{lee2020gradients}---adds nothing over free logit-based baselines, underscoring
+that the predictive content lives in the \emph{inner-product structure} of the kernel, not in
+gradient magnitude.
