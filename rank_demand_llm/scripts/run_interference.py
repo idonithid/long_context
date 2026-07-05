@@ -69,12 +69,54 @@ def eval_ce_acc(model, tokenizer, samples, device, gen_max_new=48):
     return float(np.mean(ces)), float(np.mean(accs))
 
 
+LOSS_SCALE = 1024.0
+
+
 def finetune_subset(model, tokenizer, params, samples, device,
                     lr=2e-5, epochs=3, accum=8):
-    """Adam on the NTK parameter subset only; answer-token CE."""
-    opt = torch.optim.Adam([p for p in params.values()], lr=lr)
+    """Adam on fp32 MASTER copies of the NTK parameter subset.
+
+    Training fp16 weights directly (fp16 grads, fp16 Adam states, no loss
+    scaling) destroys the model within a few steps — grads underflow/overflow
+    and the update noise floor exceeds lr*grad. Standard mixed-precision
+    recipe instead: scaled backward, fp32 master update, copy back to fp16.
+    """
+    masters = {n: p.detach().float().clone().requires_grad_(False)
+               for n, p in params.items()}
+    opt = torch.optim.Adam(list(masters.values()), lr=lr)
     model.train()
-    step = 0
+    step, skipped = 0, 0
+
+    def apply_update():
+        nonlocal step, skipped
+        grads = {}
+        finite = True
+        for n, p in params.items():
+            if p.grad is None:
+                finite = False
+                break
+            g = p.grad.detach().float() / (LOSS_SCALE * accum)
+            if not torch.isfinite(g).all():
+                finite = False
+                break
+            grads[n] = g
+        if finite:
+            gn = torch.sqrt(sum((g ** 2).sum() for g in grads.values()))
+            clip = min(1.0, 1.0 / (float(gn) + 1e-12))
+            for n, m in masters.items():
+                m.grad = grads[n] * clip
+            opt.step()
+            with torch.no_grad():
+                for n, p in params.items():
+                    p.copy_(masters[n].to(p.dtype))
+            step += 1
+        else:
+            skipped += 1
+        for p in params.values():
+            p.grad = None
+        for m in masters.values():
+            m.grad = None
+
     for ep in range(epochs):
         for bi, s in enumerate(samples):
             ids, ans = encode(tokenizer, s, device)
@@ -82,14 +124,15 @@ def finetune_subset(model, tokenizer, params, samples, device,
             labels = full.clone()
             labels[:, : ids.shape[1]] = -100
             loss = model(input_ids=full, labels=labels, use_cache=False).loss
-            (loss / accum).backward()
+            if torch.isfinite(loss):
+                (loss * LOSS_SCALE / accum).backward()
             if (bi + 1) % accum == 0:
-                torch.nn.utils.clip_grad_norm_(list(params.values()), 1.0)
-                opt.step()
-                opt.zero_grad(set_to_none=True)
-                step += 1
-    opt.zero_grad(set_to_none=True)
+                apply_update()
+    if any(p.grad is not None for p in params.values()):
+        apply_update()
     model.eval()
+    if skipped:
+        print(f"  ({skipped} non-finite update(s) skipped)")
     return step
 
 
