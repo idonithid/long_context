@@ -188,17 +188,30 @@ def main():
     ap.add_argument("--selfgrad", default=None)
     ap.add_argument("--selfgrad_llama", default=None)
     ap.add_argument("--interference", default=None)
+    ap.add_argument("--interference_extra", nargs="*", default=[],
+                    help="additional interference run dirs (hetero/lora/llama "
+                         "variants); missing ones are skipped, not fatal")
     ap.add_argument("--out", default=str(REPO_ROOT / "reports/methods.md"))
     args = ap.parse_args()
     setup_logging()
 
-    report = {"exp1_selfgrad": [], "exp2_interference": None}
+    report = {"exp1_selfgrad": [], "exp2_interference": None,
+              "exp2_variants": {}}
     for p, label in [(args.selfgrad, "Qwen2.5-7B"),
                      (args.selfgrad_llama, "Llama-3.1-8B")]:
         if p and Path(p).exists():
             report["exp1_selfgrad"].append(analyze_selfgrad(Path(p), label))
     if args.interference and Path(args.interference, "summary.json").exists():
         report["exp2_interference"] = analyze_interference(Path(args.interference))
+    for extra in args.interference_extra:
+        ep = Path(extra)
+        if (ep / "summary.json").exists():
+            try:
+                report["exp2_variants"][ep.name] = analyze_interference(ep)
+            except Exception as e:
+                report["exp2_variants"][ep.name] = {"error": str(e)[:200]}
+        else:
+            report["exp2_variants"][ep.name] = {"skip_reason": "no summary.json"}
 
     print(json.dumps(report, indent=2, default=str))
     out = Path(args.out)
