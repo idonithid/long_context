@@ -1,0 +1,82 @@
+{
+  "mode": "main",
+  "lengths": [
+    1024,
+    2048,
+    4096,
+    8192
+  ],
+  "num_samples": 50,
+  "tasks": {
+    "niah_single_1": "single_needle",
+    "niah_multikey_1": "multi_needle",
+    "vt": "multi_hop_tracing",
+    "cwe": "aggregation",
+    "qa_1": "qa"
+  },
+  "failures": [],
+  "evidence_status": {
+    "niah_single_1@1024": {
+      "exact": 50
+    },
+    "niah_single_1@2048": {
+      "exact": 50
+    },
+    "niah_single_1@4096": {
+      "exact": 50
+    },
+    "niah_single_1@8192": {
+      "exact": 50
+    },
+    "niah_multikey_1@1024": {
+      "exact": 50
+    },
+    "niah_multikey_1@2048": {
+      "exact": 50
+    },
+    "niah_multikey_1@4096": {
+      "exact": 50
+    },
+    "niah_multikey_1@8192": {
+      "exact": 50
+    },
+    "vt@1024": {
+      "approximate": 50
+    },
+    "vt@2048": {
+      "approximate": 50
+    },
+    "vt@4096": {
+      "approximate": 50
+    },
+    "vt@8192": {
+      "approximate": 50
+    },
+    "cwe@1024": {
+      "unavailable": 50
+    },
+    "cwe@2048": {
+      "unavailable": 50
+    },
+    "cwe@4096": {
+      "unavailable": 50
+    },
+    "cwe@8192": {
+      "unavailable": 50
+    },
+    "qa_1@1024": {
+      "exact": 50
+    },
+    "qa_1@2048": {
+      "exact": 50
+    },
+    "qa_1@4096": {
+      "exact": 50
+    },
+    "qa_1@8192": {
+      "exact": 50
+    }
+  },
+  "tokenizer": "meta-llama/Llama-3.1-8B-Instruct",
+  "seed": 1234
+}

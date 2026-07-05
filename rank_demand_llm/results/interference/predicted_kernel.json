@@ -1,0 +1,102 @@
+{
+  "niah_single_1->niah_single_1": {
+    "mean_kernel": 2.8752171993255615,
+    "mean_cos": 0.6995947360992432
+  },
+  "niah_single_1->niah_multikey_1": {
+    "mean_kernel": 1.9392040967941284,
+    "mean_cos": 0.41989102959632874
+  },
+  "niah_single_1->vt": {
+    "mean_kernel": 0.6173991560935974,
+    "mean_cos": 0.009327358566224575
+  },
+  "niah_single_1->cwe": {
+    "mean_kernel": 2.1400654315948486,
+    "mean_cos": 0.007695978973060846
+  },
+  "niah_single_1->qa_1": {
+    "mean_kernel": -0.3726539611816406,
+    "mean_cos": -0.006532715167850256
+  },
+  "niah_multikey_1->niah_single_1": {
+    "mean_kernel": 2.5678744316101074,
+    "mean_cos": 0.4390738904476166
+  },
+  "niah_multikey_1->niah_multikey_1": {
+    "mean_kernel": 4.904485702514648,
+    "mean_cos": 0.6220124959945679
+  },
+  "niah_multikey_1->vt": {
+    "mean_kernel": 1.2203210592269897,
+    "mean_cos": 0.008313706144690514
+  },
+  "niah_multikey_1->cwe": {
+    "mean_kernel": 2.5874722003936768,
+    "mean_cos": -0.00827487651258707
+  },
+  "niah_multikey_1->qa_1": {
+    "mean_kernel": -0.947766900062561,
+    "mean_cos": -0.010967879556119442
+  },
+  "vt->niah_single_1": {
+    "mean_kernel": 0.29568397998809814,
+    "mean_cos": 0.013319266028702259
+  },
+  "vt->niah_multikey_1": {
+    "mean_kernel": 0.44598668813705444,
+    "mean_cos": 0.013194626197218895
+  },
+  "vt->vt": {
+    "mean_kernel": 65.71953582763672,
+    "mean_cos": 0.527731716632843
+  },
+  "vt->cwe": {
+    "mean_kernel": 24.47873878479004,
+    "mean_cos": 0.038358304649591446
+  },
+  "vt->qa_1": {
+    "mean_kernel": 7.985065937042236,
+    "mean_cos": 0.008857961744070053
+  },
+  "cwe->niah_single_1": {
+    "mean_kernel": 0.5364062190055847,
+    "mean_cos": -0.004420288372784853
+  },
+  "cwe->niah_multikey_1": {
+    "mean_kernel": 0.5812073349952698,
+    "mean_cos": -0.002132317516952753
+  },
+  "cwe->vt": {
+    "mean_kernel": 15.370672225952148,
+    "mean_cos": 0.030176261439919472
+  },
+  "cwe->cwe": {
+    "mean_kernel": 664.2884521484375,
+    "mean_cos": 0.2352474182844162
+  },
+  "cwe->qa_1": {
+    "mean_kernel": 116.19070434570312,
+    "mean_cos": 0.03716759383678436
+  },
+  "qa_1->niah_single_1": {
+    "mean_kernel": -0.26286473870277405,
+    "mean_cos": -0.00677856570109725
+  },
+  "qa_1->niah_multikey_1": {
+    "mean_kernel": -0.9345340728759766,
+    "mean_cos": -0.011713990941643715
+  },
+  "qa_1->vt": {
+    "mean_kernel": 8.080294609069824,
+    "mean_cos": 0.010583803988993168
+  },
+  "qa_1->cwe": {
+    "mean_kernel": 118.90218353271484,
+    "mean_cos": 0.03657124564051628
+  },
+  "qa_1->qa_1": {
+    "mean_kernel": 741.4007568359375,
+    "mean_cos": 0.19705744087696075
+  }
+}

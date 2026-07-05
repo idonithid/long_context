@@ -1,0 +1,76 @@
+Sun 05 Jul 2026 10:49:12 IDT DONE
+finished: Sun 05 Jul 2026 10:49:12 IDT
+reports/methods.md ready
+== results/interference ==
+{
+  "spearman_kernel_vs_dce": [
+    0.793,
+    0.0
+  ],
+  "pearson_kernel_vs_dce": [
+    0.9774,
+    0.0
+  ],
+  "spearman_cos_vs_dce": [
+    0.6449,
+    0.0005
+  ],
+  "off_diag_spearman": [
+    0.6797,
+    0.001
+  ]
+}== results/interference_hetero ==
+{
+  "spearman_kernel_vs_dce": [
+    0.9069,
+    0.0
+  ],
+  "pearson_kernel_vs_dce": [
+    0.9216,
+    0.0
+  ],
+  "spearman_cos_vs_dce": [
+    0.7415,
+    0.0
+  ],
+  "off_diag_spearman": [
+    0.8737,
+    0.0
+  ]
+}== results/interference_lora ==
+{
+  "spearman_kernel_vs_dce": [
+    0.7768,
+    0.0
+  ],
+  "pearson_kernel_vs_dce": [
+    0.88,
+    0.0
+  ],
+  "spearman_cos_vs_dce": [
+    0.6264,
+    0.0008
+  ],
+  "off_diag_spearman": [
+    0.618,
+    0.0037
+  ]
+}== results/interference_llama ==
+{
+  "spearman_kernel_vs_dce": [
+    0.8192,
+    0.0
+  ],
+  "pearson_kernel_vs_dce": [
+    0.7456,
+    0.0
+  ],
+  "spearman_cos_vs_dce": [
+    0.73,
+    0.0
+  ],
+  "off_diag_spearman": [
+    0.6917,
+    0.0007
+  ]
+}

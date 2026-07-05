@@ -1,0 +1,18 @@
+{
+  "spearman_kernel_vs_dce": [
+    0.7768,
+    0.0
+  ],
+  "pearson_kernel_vs_dce": [
+    0.88,
+    0.0
+  ],
+  "spearman_cos_vs_dce": [
+    0.6264,
+    0.0008
+  ],
+  "off_diag_spearman": [
+    0.618,
+    0.0037
+  ]
+}

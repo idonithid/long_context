@@ -1,0 +1,192 @@
+{
+  "gsm8k": {
+    "steps": 12,
+    "post": {
+      "gsm8k": {
+        "dce": -0.56731,
+        "dacc": null,
+        "ce": 0.546516474088033,
+        "acc": null
+      },
+      "mbpp_code": {
+        "dce": -0.53038,
+        "dacc": null,
+        "ce": 2.120882898569107,
+        "acc": null
+      },
+      "qa_1": {
+        "dce": -0.67561,
+        "dacc": null,
+        "ce": 3.810869586467743,
+        "acc": null
+      },
+      "niah_single_1": {
+        "dce": 0.01535,
+        "dacc": null,
+        "ce": 0.021886617713607847,
+        "acc": null
+      },
+      "cwe": {
+        "dce": -0.19109,
+        "dacc": null,
+        "ce": 3.370419907569885,
+        "acc": null
+      }
+    },
+    "trainer": "subset",
+    "lr": 2e-05,
+    "minutes": 0.9
+  },
+  "mbpp_code": {
+    "steps": 12,
+    "post": {
+      "gsm8k": {
+        "dce": -0.25937,
+        "dacc": null,
+        "ce": 0.854452320933342,
+        "acc": null
+      },
+      "mbpp_code": {
+        "dce": -1.88764,
+        "dacc": null,
+        "ce": 0.7636153946320215,
+        "acc": null
+      },
+      "qa_1": {
+        "dce": -0.74997,
+        "dacc": null,
+        "ce": 3.736508071422577,
+        "acc": null
+      },
+      "niah_single_1": {
+        "dce": 0.01526,
+        "dacc": null,
+        "ce": 0.02180145711948474,
+        "acc": null
+      },
+      "cwe": {
+        "dce": -0.48174,
+        "dacc": null,
+        "ce": 3.0797701994578044,
+        "acc": null
+      }
+    },
+    "trainer": "subset",
+    "lr": 2e-05,
+    "minutes": 0.8
+  },
+  "qa_1": {
+    "steps": 12,
+    "post": {
+      "gsm8k": {
+        "dce": -0.13585,
+        "dacc": null,
+        "ce": 0.9779809574286144,
+        "acc": null
+      },
+      "mbpp_code": {
+        "dce": -0.28823,
+        "dacc": null,
+        "ce": 2.3630265216032664,
+        "acc": null
+      },
+      "qa_1": {
+        "dce": -4.14968,
+        "dacc": null,
+        "ce": 0.33679722050825756,
+        "acc": null
+      },
+      "niah_single_1": {
+        "dce": 0.04632,
+        "dacc": null,
+        "ce": 0.05285666494940718,
+        "acc": null
+      },
+      "cwe": {
+        "dce": -0.48059,
+        "dacc": null,
+        "ce": 3.0809195121129354,
+        "acc": null
+      }
+    },
+    "trainer": "subset",
+    "lr": 2e-05,
+    "minutes": 0.9
+  },
+  "niah_single_1": {
+    "steps": 12,
+    "post": {
+      "gsm8k": {
+        "dce": 0.01767,
+        "dacc": null,
+        "ce": 1.1314983944098154,
+        "acc": null
+      },
+      "mbpp_code": {
+        "dce": -0.07082,
+        "dacc": null,
+        "ce": 2.580443565050761,
+        "acc": null
+      },
+      "qa_1": {
+        "dce": 0.05406,
+        "dacc": null,
+        "ce": 4.540544108549754,
+        "acc": null
+      },
+      "niah_single_1": {
+        "dce": -0.00654,
+        "dacc": null,
+        "ce": 7.415712900934086e-07,
+        "acc": null
+      },
+      "cwe": {
+        "dce": -0.04222,
+        "dacc": null,
+        "ce": 3.5192851463953656,
+        "acc": null
+      }
+    },
+    "trainer": "subset",
+    "lr": 2e-05,
+    "minutes": 1.5
+  },
+  "cwe": {
+    "steps": 12,
+    "post": {
+      "gsm8k": {
+        "dce": -0.09733,
+        "dacc": null,
+        "ce": 1.016495132446289,
+        "acc": null
+      },
+      "mbpp_code": {
+        "dce": -0.34986,
+        "dacc": null,
+        "ce": 2.301399705807368,
+        "acc": null
+      },
+      "qa_1": {
+        "dce": -0.42344,
+        "dacc": null,
+        "ce": 4.063043137391408,
+        "acc": null
+      },
+      "niah_single_1": {
+        "dce": 0.004,
+        "dacc": null,
+        "ce": 0.010536175896413624,
+        "acc": null
+      },
+      "cwe": {
+        "dce": -2.45522,
+        "dacc": null,
+        "ce": 1.1062904953956605,
+        "acc": null
+      }
+    },
+    "trainer": "subset",
+    "lr": 2e-05,
+    "minutes": 1.6
+  }
+}

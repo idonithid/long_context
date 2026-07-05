@@ -1,0 +1,66 @@
+{
+  "command": "/home/initzan/long_context/rank_demand_llm/rank_demand/eval_ruler.py --config configs/ruler_qwen2p5_7b.yaml --mode main --lengths 1024 --output_dir results/trunc_run --run_attention_truncation",
+  "model_id": "Qwen/Qwen2.5-7B-Instruct",
+  "mode": "main",
+  "tasks": {
+    "niah_single_1": "single_needle",
+    "niah_multikey_1": "multi_needle",
+    "vt": "multi_hop_tracing",
+    "cwe": "aggregation",
+    "qa_1": "qa"
+  },
+  "lengths": [
+    1024
+  ],
+  "num_samples_per_task_length": 50,
+  "seed": 1234,
+  "gpu": {
+    "cuda": true,
+    "device_index": 0,
+    "name": "Quadro RTX 8000",
+    "total_gb": 47.6,
+    "free_gb": 47.4,
+    "compute_capability": "7.5"
+  },
+  "metrics_config": {
+    "layer_fractions": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "center_hidden": true,
+    "hidden_subsample_max_tokens": 8192,
+    "exact_attention_max_tokens": 2048,
+    "allow_exact_attention_4096": false,
+    "exact_rank_max_tokens": 1024,
+    "block_size": 64,
+    "all_heads_max_tokens": 1024,
+    "sampled_heads": [
+      0,
+      "middle",
+      "last"
+    ],
+    "evidence_ks": [
+      8,
+      16,
+      32,
+      64,
+      128,
+      256
+    ],
+    "score_matrix": true,
+    "store_attention": false,
+    "truncation_ks": [
+      4,
+      8,
+      16,
+      32,
+      64,
+      128
+    ],
+    "hidden_only": false
+  },
+  "started_at": "2026-07-04 15:26:19"
+}

@@ -1,0 +1,102 @@
+{
+  "gsm8k->gsm8k": {
+    "mean_kernel": 34.188743591308594,
+    "mean_cos": 0.3085579574108124
+  },
+  "gsm8k->mbpp_code": {
+    "mean_kernel": 19.76131820678711,
+    "mean_cos": 0.09812220185995102
+  },
+  "gsm8k->qa_1": {
+    "mean_kernel": 27.765933990478516,
+    "mean_cos": 0.03819463402032852
+  },
+  "gsm8k->niah_single_1": {
+    "mean_kernel": -0.5029459595680237,
+    "mean_cos": -0.022983046248555183
+  },
+  "gsm8k->cwe": {
+    "mean_kernel": 4.303237438201904,
+    "mean_cos": 0.006563284900039434
+  },
+  "mbpp_code->gsm8k": {
+    "mean_kernel": 17.914674758911133,
+    "mean_cos": 0.10787627100944519
+  },
+  "mbpp_code->mbpp_code": {
+    "mean_kernel": 106.32560729980469,
+    "mean_cos": 0.3264884352684021
+  },
+  "mbpp_code->qa_1": {
+    "mean_kernel": 45.81180953979492,
+    "mean_cos": 0.040002770721912384
+  },
+  "mbpp_code->niah_single_1": {
+    "mean_kernel": -0.23622092604637146,
+    "mean_cos": -0.02501334808766842
+  },
+  "mbpp_code->cwe": {
+    "mean_kernel": 32.15664291381836,
+    "mean_cos": 0.03464259207248688
+  },
+  "qa_1->gsm8k": {
+    "mean_kernel": 23.95083236694336,
+    "mean_cos": 0.04250512272119522
+  },
+  "qa_1->mbpp_code": {
+    "mean_kernel": 50.66804885864258,
+    "mean_cos": 0.04605424404144287
+  },
+  "qa_1->qa_1": {
+    "mean_kernel": 734.4278564453125,
+    "mean_cos": 0.19503657519817352
+  },
+  "qa_1->niah_single_1": {
+    "mean_kernel": -1.5644066333770752,
+    "mean_cos": -0.01971995085477829
+  },
+  "qa_1->cwe": {
+    "mean_kernel": 101.7071304321289,
+    "mean_cos": 0.029236551374197006
+  },
+  "niah_single_1->gsm8k": {
+    "mean_kernel": -0.43803170323371887,
+    "mean_cos": -0.023160450160503387
+  },
+  "niah_single_1->mbpp_code": {
+    "mean_kernel": 0.06265164166688919,
+    "mean_cos": -0.01836281083524227
+  },
+  "niah_single_1->qa_1": {
+    "mean_kernel": -1.9876066446304321,
+    "mean_cos": -0.019952263683080673
+  },
+  "niah_single_1->niah_single_1": {
+    "mean_kernel": 2.8499033451080322,
+    "mean_cos": 0.6993473172187805
+  },
+  "niah_single_1->cwe": {
+    "mean_kernel": 0.249252587556839,
+    "mean_cos": -0.009367628954350948
+  },
+  "cwe->gsm8k": {
+    "mean_kernel": 13.015181541442871,
+    "mean_cos": 0.0287849772721529
+  },
+  "cwe->mbpp_code": {
+    "mean_kernel": 41.37749099731445,
+    "mean_cos": 0.045091114938259125
+  },
+  "cwe->qa_1": {
+    "mean_kernel": 106.40061950683594,
+    "mean_cos": 0.03245727717876434
+  },
+  "cwe->niah_single_1": {
+    "mean_kernel": -0.654062032699585,
+    "mean_cos": -0.019596239551901817
+  },
+  "cwe->cwe": {
+    "mean_kernel": 663.3701782226562,
+    "mean_cos": 0.23459765315055847
+  }
+}
