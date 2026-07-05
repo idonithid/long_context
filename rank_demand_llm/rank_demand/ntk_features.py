@@ -106,11 +106,14 @@ class NTKExtractor:
 
     @torch.enable_grad()
     def features(self, input_ids: torch.Tensor,
-                 answer_ids: torch.Tensor) -> dict:
+                 answer_ids: torch.Tensor,
+                 return_token_stats: bool = False) -> dict:
         """One backward pass. input_ids: (1, T_prompt); answer_ids: (1, T_ans).
 
         Returns dict: grad_norm, self_kernel, per-group norms, answer_ce,
-        sketch (np.ndarray of sketch_dim, fp32).
+        sketch (np.ndarray of sketch_dim, fp32). With return_token_stats,
+        adds cheap confidence baselines over the answer positions:
+        mean/min token logprob and mean predictive entropy.
         """
         model = self.model
         model.zero_grad(set_to_none=True)
@@ -119,6 +122,22 @@ class NTKExtractor:
         labels[:, : input_ids.shape[1]] = -100  # loss on answer tokens only
         out = model(input_ids=full, labels=labels, use_cache=False)
         loss = out.loss
+        token_stats = {}
+        if return_token_stats:
+            with torch.no_grad():
+                Tp = input_ids.shape[1]
+                # logits at position t predict token t+1
+                lg = out.logits[0, Tp - 1: full.shape[1] - 1].float()
+                logp = torch.log_softmax(lg, dim=-1)
+                tok_lp = logp.gather(1, answer_ids[0].unsqueeze(1)).squeeze(1)
+                probs = logp.exp()
+                ent = -(probs * logp).sum(dim=-1)
+                token_stats = {
+                    "mean_token_logprob": float(tok_lp.mean()),
+                    "min_token_logprob": float(tok_lp.min()),
+                    "mean_token_entropy": float(ent.mean()),
+                    "max_token_entropy": float(ent.max()),
+                }
         (loss * LOSS_SCALE).backward()
 
         norms = {}
@@ -144,6 +163,7 @@ class NTKExtractor:
             "group_norms": norms,
             "nonfinite_grad_elems": nonfinite,
             "sketch": sketch.astype(np.float32),
+            **token_stats,
         }
 
 

@@ -73,16 +73,21 @@ def main():
     ap.add_argument("--lengths", nargs="*", type=int, default=None)
     ap.add_argument("--num_samples", type=int, default=None)
     ap.add_argument("--data_dir", default=None)
+    ap.add_argument("--seed", type=int, default=None,
+                    help="override config seed (e.g. disjoint train split)")
     args = ap.parse_args()
 
     setup_logging()
     cfg = load_config(args.config)
+    if args.seed is not None:
+        cfg["seed"] = args.seed
     mode_cfg = cfg[args.mode]
     lengths = args.lengths or mode_cfg["context_lengths"]
     num_samples = args.num_samples or mode_cfg["num_samples"]
     tasks = {t: f for t, f in cfg["tasks"].items()
              if args.tasks is None or t in args.tasks}
-    data_dir = Path(args.data_dir or REPO_ROOT / cfg["data_dir"]) / args.mode
+    # absolutize: the RULER subprocess runs with cwd=external/RULER/scripts/data
+    data_dir = Path(args.data_dir or REPO_ROOT / cfg["data_dir"]).resolve() / args.mode
     raw_dir = data_dir / "raw"
     data_dir.mkdir(parents=True, exist_ok=True)
 
