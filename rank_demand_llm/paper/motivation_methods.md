@@ -99,12 +99,27 @@ to a fixed parameter subset S.
 depth fractions {0, ¼, ½, ¾, 1} — approximately 73M parameters of a 7.6B model (0.97%; 105M for Llama-3.1-8B).
 The subset is fixed once per model and never tuned per task.
 
-**First-order rationale.** One SGD step on sample s_i with learning rate η changes the
-loss on sample s_j by ΔL(s_j) ≈ −η ⟨g(s_i), g(s_j)⟩ + O(η²): the empirical NTK entry.
-Averaging over a training set T_i and an evaluation set E_j gives a first-order prediction
-of capability-level transfer (negative ΔCE) or interference (positive ΔCE):
+**First-order rationale (with the curvature term made explicit).** One SGD step on sample
+s_i with learning rate η, expanded to *second* order on sample s_j:
+
+    ΔL(s_j) = −η⟨g(s_i), g(s_j)⟩  +  ½η² g(s_i)ᵀ H_j g(s_i)  +  O(η³‖g(s_i)‖³),
+
+where H_j = ∇²L(s_j) is the Hessian of s_j's loss. The dropped term is not a bare O(η²)
+with a universal constant: |½η² gᵀH_j g| ≤ ½η²‖H_j‖₂‖g(s_i)‖², so it is governed by the
+curvature and the squared gradient norm, and is negligible relative to the leading eNTK
+term exactly when η‖H_j‖₂‖g(s_i)‖² ≪ |⟨g(s_i),g(s_j)⟩| (small lr, mild curvature).
+
+For a whole run, net displacement Δθ_i gives ΔL(s_j) = ⟨g(s_j),Δθ_i⟩ + ½Δθ_iᵀH_jΔθ_i + …;
+with (A1) trajectory stability (g^(t)≈g at base θ) and (A2) scalar preconditioning
+(Adam's P_t≈cI), Δθ_i ≈ −ηc·Σ_{s∈T_i} g(s), so the leading term is a base-model kernel.
+Averaging over T_i and E_j gives the capability-level prediction of transfer (negative ΔCE)
+or interference (positive ΔCE):
 
     K[i, j] = mean over s∈T_i, s'∈E_j of ⟨g(s), g(s')⟩;   predicted ΔCE[i, j] ∝ −K[i, j].
+
+We test this as *rank* correlation because four error terms — curvature (~‖H_j‖‖Δθ‖²,
+grows with η² and horizon²), trajectory drift (A1), Adam preconditioning (A2), and sketch
+variance (O(1/m)) — perturb magnitudes but preserve sign/ordering for short horizons.
 
 ### 2.2 Sketched fingerprints
 

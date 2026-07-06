@@ -1,24 +1,21 @@
-\documentclass[10pt]{article}
+\documentclass{article} % For LaTeX2e
 
-\usepackage[margin=1in]{geometry}
-\usepackage[numbers]{natbib}
+\usepackage{iclr2026_conference,times}
+\input{math_commands.tex}
+
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
-% hyperref intentionally omitted: this TeX install lacks etoolbox/ltxcmds.
-% Re-add \usepackage[colorlinks=true]{hyperref} once the full texlive is available.
-
-% Minimal booktabs emulation (booktabs.sty unavailable in this TeX install).
-\providecommand{\toprule}{\hline\noalign{\vskip1pt}}
-\providecommand{\midrule}{\noalign{\vskip1pt}\hline\noalign{\vskip1pt}}
-\providecommand{\bottomrule}{\noalign{\vskip1pt}\hline}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{url}
 
 \graphicspath{{figures/}}
 
-\title{\bfseries Sketched Empirical-NTK Capability Fingerprints Predict\\
+\title{Sketched Empirical-NTK Capability Fingerprints Predict\\
 Fine-Tuning Transfer and Interference in Large Language Models}
 
-\author{}
-\date{}
+% Anonymous submission: authors hidden until \iclrfinalcopy is uncommented.
+\author{Anonymous authors\\Paper under double-blind review}
 
 \begin{document}
 \maketitle
@@ -125,18 +122,63 @@ computed only over answer tokens (the prompt is masked). We restrict attention t
 parameter subset $S\subseteq\theta$ and define the per-sample gradient
 $g(s) = \nabla_{\theta_S} L(s;\theta) \in \mathbb{R}^{|S|}$.
 
-\paragraph{First-order effect of one gradient step.}
-Consider one gradient-descent step of size $\eta$ taken on sample $s_i$,
-$\theta_S \leftarrow \theta_S - \eta\, g(s_i)$. A first-order Taylor expansion of the loss on a
-second sample $s_j$ around $\theta_S$ gives
+\paragraph{The prediction we make.}
+The quantity we want, \emph{before running any training}, is the change in the loss on a
+held-out capability $j$ caused by fine-tuning on capability $i$. Fine-tuning displaces the
+parameters from $\theta_S$ to $\theta_S+\Delta\theta_i$, and the loss on any sample $s_j$ changes
+by a Taylor expansion in that displacement. The leading term is the inner product between $s_j$'s
+loss gradient and the update direction; the update direction is itself a (preconditioned) sum of
+the \emph{training} gradients. The core claim of the method is that this leading term is well
+approximated by --- and can be predicted from --- the gradient inner products
+$\langle g(s), g(s')\rangle$ measured at the \emph{base} model, without ever taking the training
+step. Below we make the approximation and its error terms explicit.
+
+\paragraph{One gradient step: the leading term and the curvature it drops.}
+Take a single gradient-descent step of size $\eta$ on sample $s_i$,
+$\theta_S \leftarrow \theta_S - \eta\, g(s_i)$, and expand the loss on a second sample $s_j$ to
+second order in the displacement $-\eta g(s_i)$:
 \begin{equation}
-  \Delta L(s_j) \;=\; L(s_j;\theta - \eta g(s_i)) - L(s_j;\theta)
-  \;=\; -\eta\,\big\langle g(s_i),\, g(s_j)\big\rangle \;+\; O(\eta^2).
-  \label{eq:firstorder}
+\begin{split}
+  \Delta L(s_j)
+  \;=\; L\!\big(s_j;\theta - \eta g(s_i)\big) - L(s_j;\theta)
+  \;=\;\; & \underbrace{-\,\eta\,\big\langle g(s_i),\, g(s_j)\big\rangle}_{\text{first order (the eNTK)}}
+  \;+\; \underbrace{\tfrac{1}{2}\,\eta^2\, g(s_i)^{\!\top} H_j\, g(s_i)}_{\text{curvature}} \\[2pt]
+  & +\; O\!\big(\eta^3 \|g(s_i)\|^3\big),
+\end{split}
+  \label{eq:secondorder}
 \end{equation}
-Averaging \eqref{eq:firstorder} over a training set $T_i$ (drawn from capability $i$) and an
-evaluation set $E_j$ (from capability $j$) yields a first-order prediction of capability-level
-transfer. Define the predicted transfer matrix
+where $H_j = \nabla^2_{\theta_S} L(s_j;\theta)$ is the Hessian of the loss on $s_j$ at the base
+parameters. The neglected term is therefore \emph{not} a bare $O(\eta^2)$ with a universal
+constant: its size is set by the curvature and the \emph{squared gradient norm}, and is bounded by
+\begin{equation}
+  \Big|\tfrac{1}{2}\eta^2\, g(s_i)^{\!\top} H_j\, g(s_i)\Big|
+  \;\le\; \tfrac{1}{2}\,\eta^2\,\|H_j\|_2\,\|g(s_i)\|^2 .
+  \label{eq:curvbound}
+\end{equation}
+The first-order (eNTK) prediction dominates precisely when
+$\eta\,\|H_j\|_2\,\|g(s_i)\|^2 \ll \big|\langle g(s_i),g(s_j)\rangle\big|$, i.e.\ for small learning
+rate and mild curvature along the update direction. Because we validate by \emph{rank} agreement,
+we need only that this curvature correction not reorder the capability pairs --- a substantially
+weaker condition than it being negligible in magnitude.
+
+\paragraph{A whole fine-tuning run.}
+Fine-tuning on $T_i$ is a sequence of such steps. Writing the net displacement as
+$\Delta\theta_i$, the second-order expansion of the loss on $s_j$ is
+\begin{equation}
+  \Delta L(s_j) \;=\; \big\langle g(s_j),\, \Delta\theta_i\big\rangle
+  \;+\; \tfrac{1}{2}\,\Delta\theta_i^{\!\top} H_j\, \Delta\theta_i \;+\; O\!\big(\|\Delta\theta_i\|^3\big).
+  \label{eq:runexpand}
+\end{equation}
+For a (possibly preconditioned) descent trajectory,
+$\Delta\theta_i = -\eta\sum_{t} P_t\, g^{(t)}$, where $g^{(t)}$ is the minibatch gradient at step
+$t$ and $P_t$ is the optimizer's preconditioner ($P_t=I$ for SGD; a diagonal matrix for Adam).
+Two approximations reduce the leading term to a base-model kernel: \textbf{(A1)~trajectory
+stability} --- over a short run the gradients rotate little, $g^{(t)}\approx g$ evaluated at the
+base $\theta$; and \textbf{(A2)~scalar preconditioning} --- $P_t\approx c\,I$, discarding Adam's
+per-coordinate reweighting. Under (A1)--(A2),
+$\Delta\theta_i \approx -\eta c\sum_{s\in T_i} g(s)$, so
+$\langle g(s_j),\Delta\theta_i\rangle \approx -\eta c\sum_{s\in T_i}\langle g(s_j), g(s)\rangle$.
+Averaging over the train set $T_i$ and eval set $E_j$ gives the predicted transfer matrix
 \begin{equation}
   K[i,j] \;=\; \frac{1}{|T_i|\,|E_j|}\sum_{s\in T_i}\sum_{s'\in E_j}
              \big\langle g(s),\, g(s')\big\rangle,
@@ -144,19 +186,33 @@ transfer. Define the predicted transfer matrix
   \text{predicted } \Delta\mathrm{CE}[i,j] \;\propto\; -\,K[i,j].
   \label{eq:kernel}
 \end{equation}
-Large positive $K[i,j]$ predicts that training on $i$ \emph{reduces} the loss on $j$ (transfer);
-negative $K[i,j]$ predicts an \emph{increase} (interference). This is a prediction of direction
-and relative magnitude, not of the exact loss change: the constant of proportionality absorbs
-$\eta$, the number of steps, and higher-order curvature, so we evaluate it by rank
-(Spearman) and linear (Pearson) agreement with the measured $\Delta$CE.
+Positive $K[i,j]$ predicts that training on $i$ \emph{reduces} the loss on $j$ (transfer);
+negative $K[i,j]$ predicts an \emph{increase} (interference).
+
+\paragraph{What the prediction drops, and why rank survives it.}
+Equation~\eqref{eq:kernel} is exact only in the limit of a single infinitesimal step with
+identity preconditioner. Four error sources separate it from the measured $\Delta$CE, and it is
+worth naming them because they set the regime of validity: \textbf{(1)~curvature} --- the
+$\tfrac12\Delta\theta_i^\top H_j\Delta\theta_i$ term of \eqref{eq:runexpand}, of order
+$\|H_j\|_2\,\|\Delta\theta_i\|^2$, which grows with $\eta^2$ and with the square of the training
+horizon; \textbf{(2)~trajectory drift} --- the error in (A1), which grows with $\eta$ times the
+number of steps; \textbf{(3)~preconditioning} --- the error in (A2), since our actual optimizer is
+Adam, whose diagonal reweighting is not a global scalar; and \textbf{(4)~sketching variance}
+(\S\ref{sec:method}), of order $1/m$. All four leave the \emph{sign} and coarse ordering of
+$K[i,j]$ intact as long as $\eta$ and the horizon are small, which is why we report Spearman rank
+and Pearson agreement with measured $\Delta$CE rather than claiming an exact magnitude match, and
+why the constant of proportionality (absorbing $\eta$, $c$, and step count) is left free. The
+horizon-scaling experiment (\S\ref{sec:conclusion}, future work) probes exactly when errors
+(1)--(2) grow large enough to degrade the rank prediction.
 
 \paragraph{Empirical neural tangent kernel.}
-The matrix $\langle g(s), g(s')\rangle$ is the empirical NTK of $f_\theta$ evaluated on the loss
-gradients at the current parameters \citep{jacot2018ntk,malladi2023kernel}. Unlike the
-infinite-width NTK it is not constant, but for the short fine-tuning horizons of interest the
-first-order regime of \eqref{eq:firstorder} is the relevant one, and the eNTK Gram matrix over
-capability samples is exactly the object that governs it. Our method is a scalable estimator of
-this Gram matrix and a study of how well its structure predicts real fine-tuning outcomes.
+The Gram matrix $\langle g(s), g(s')\rangle$ is the empirical NTK of $f_\theta$ contracted with
+the loss Jacobians, evaluated at the base parameters \citep{jacot2018ntk,malladi2023kernel}.
+Unlike the infinite-width NTK it is not constant along training, but for the short fine-tuning
+horizons of interest the first-order term of \eqref{eq:runexpand} is the one that governs
+transfer, and its cross-capability structure is exactly what $K$ estimates. Our method is a
+scalable estimator of this Gram matrix and a study of how well its structure predicts real
+fine-tuning outcomes.
 
 \paragraph{CountSketch and inner-product preservation.}
 Materializing $g(s)\in\mathbb{R}^{|S|}$ for every sample is wasteful when only inner products
@@ -224,6 +280,7 @@ geometry is shared across the network rather than because we sketch exactly what
 \caption{Validation settings. All use $n_{\text{train}}=32$, $n_{\text{eval}}=30$ per capability,
 3 epochs; outcome is gold-answer $\Delta$CE.}
 \label{tab:settings}
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{@{}llll@{}}
 \toprule
 Setting & What it tests & Trainer & Capabilities \\
@@ -233,7 +290,7 @@ Heterogeneous    & real, dissimilar skills & Adam on subset $S$ & GSM8K CoT, MBP
 LoRA             & trained $\ne$ sketched params & rank-16 LoRA, all q/v layers & 5 RULER families \\
 Llama-3.1-8B     & model-family generality & Adam on subset $S$ & 5 RULER families \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \end{table}
 
 \paragraph{Trainer details.}
@@ -453,10 +510,7 @@ reasoning behaviors; horizon scaling (does the first-order prediction decay pred
 training length?); and rehearsal targeting (selecting data to rehearse by predicted interference
 and comparing against random rehearsal). We report these as directions, not results.
 
-\bibliographystyle{plainnat}
-% references_main.bib holds keys used in intro/background/method/results; references.bib is
-% the related-work agent's verified bibliography. Both are included so all citations resolve;
-% duplicate keys across the two files are to be de-duplicated in a later merge pass.
+\bibliographystyle{iclr2026_conference}
 \bibliography{references}
 
 \appendix
@@ -481,7 +535,8 @@ between capabilities so each $\Delta$CE row is measured against the same referen
 Per capability: $n_{\text{train}}=32$, $n_{\text{eval}}=30$, seed-disjoint. Sketch dimension
 $m=4096$ (one CountSketch $\Phi$ per model, fixed seed, applied per parameter tensor and summed).
 Parameter subset $S$: \texttt{q\_proj} and \texttt{v\_proj} at layer-depth fractions
-$\{0,\tfrac14,\tfrac12,\tfrac34,1\}$, $\approx 9$M parameters. Gradients use teacher-forced
+$\{0,\tfrac14,\tfrac12,\tfrac34,1\}$, $\approx 73$M parameters ($105$M for Llama-3.1-8B).
+Gradients use teacher-forced
 answer cross-entropy with the prompt masked. RULER context length is $1024$ for the interference
 experiments and $\{1024,2048,4096,8192\}$ for the rank-demand diagnostic. Correlations are
 Spearman and Pearson with two-sided $p$-values; the off-diagonal statistic excludes the five

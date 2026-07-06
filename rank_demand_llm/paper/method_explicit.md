@@ -68,24 +68,53 @@ $$
 
 ## 5. NTK: why gradient inner products predict training
 
-**One SGD step.** Take one gradient step on sample $s_i$ with learning rate $\eta$:
-$\theta' = \theta - \eta\, g(s_i)$ (restricted to $S$). First-order Taylor expansion
-of the loss on any other sample $s_j$:
+**One SGD step — the leading term and the curvature it drops.** Take one gradient
+step on sample $s_i$ with learning rate $\eta$: $\theta' = \theta - \eta\, g(s_i)$
+(restricted to $S$). Expand the loss on any other sample $s_j$ to **second order** in
+the displacement $-\eta g(s_i)$:
 
 $$
-\Delta\mathcal{L}(s_j) \;=\; \mathcal{L}(s_j;\theta') - \mathcal{L}(s_j;\theta)
-\;=\; -\eta\, \big\langle g(s_i),\, g(s_j) \big\rangle \;+\; O(\eta^2).
+\Delta\mathcal{L}(s_j)
+\;=\; \mathcal{L}(s_j;\theta') - \mathcal{L}(s_j;\theta)
+\;=\; \underbrace{-\eta\, \langle g(s_i), g(s_j) \rangle}_{\text{first order (eNTK)}}
+\;+\; \underbrace{\tfrac12 \eta^2\, g(s_i)^\top H_j\, g(s_i)}_{\text{curvature}}
+\;+\; O\!\big(\eta^3 \|g(s_i)\|^3\big),
 $$
 
-The inner product $k(s_i, s_j) = \langle g(s_i), g(s_j)\rangle$ is the **empirical
-neural tangent kernel** (in its loss-gradient form: the parameter-space NTK
-$\nabla_\theta f \nabla_\theta f^\top$ contracted with the loss Jacobians on both
-sides). Positive kernel → training on $s_i$ *reduces* loss on $s_j$ (transfer);
-negative kernel → *increases* it (interference); near-zero → no effect.
+where $H_j = \nabla^2_{\theta_S}\mathcal{L}(s_j;\theta)$ is the **Hessian** of $s_j$'s
+loss at the base parameters. The dropped term is **not** a bare $O(\eta^2)$ with a
+universal constant — its size is set by the curvature and the **squared gradient
+norm**, bounded by
 
-**Many steps / a whole training set.** Fine-tuning on $T_i$ for a few epochs is a
-sum of such steps. To first order (small total parameter displacement — verified
-post hoc: fine-tuning moves $\theta_S$ little), effects add:
+$$
+\big|\tfrac12 \eta^2\, g(s_i)^\top H_j\, g(s_i)\big|
+\;\le\; \tfrac12 \eta^2\, \|H_j\|_2\, \|g(s_i)\|^2 .
+$$
+
+So the first-order (eNTK) prediction dominates exactly when
+$\eta\, \|H_j\|_2\, \|g(s_i)\|^2 \ll |\langle g(s_i), g(s_j)\rangle|$: small learning
+rate **and** mild curvature along the update direction. The inner product
+$k(s_i, s_j) = \langle g(s_i), g(s_j)\rangle$ is the **empirical neural tangent
+kernel** (loss-gradient form: the parameter-space NTK $\nabla_\theta f \nabla_\theta
+f^\top$ contracted with the loss Jacobians on both sides). Positive kernel → training
+on $s_i$ *reduces* loss on $s_j$ (transfer); negative → *increases* it (interference).
+
+**A whole training run.** Fine-tuning on $T_i$ is a sequence of steps with net
+parameter displacement $\Delta\theta_i$. To second order,
+
+$$
+\Delta\mathcal{L}(s_j)
+\;=\; \langle g(s_j), \Delta\theta_i \rangle
+\;+\; \tfrac12 \Delta\theta_i^\top H_j\, \Delta\theta_i
+\;+\; O\!\big(\|\Delta\theta_i\|^3\big).
+$$
+
+For a (preconditioned) descent trajectory $\Delta\theta_i = -\eta \sum_t P_t g^{(t)}$
+($P_t = I$ for SGD, diagonal for Adam), two approximations collapse the leading term
+to a base-model kernel: **(A1) trajectory stability** — over a short run gradients
+rotate little, $g^{(t)} \approx g$ at base $\theta$; **(A2) scalar preconditioning** —
+$P_t \approx cI$, discarding Adam's per-coordinate reweighting. Then
+$\Delta\theta_i \approx -\eta c \sum_{s\in T_i} g(s)$ and
 
 $$
 \widehat{\Delta\mathrm{CE}}[i, j] \;\propto\; -\,K[i,j],
@@ -96,10 +125,17 @@ $$
 
 $K[i,j]$ is computable **before any training**: it needs only base-model gradients.
 
-Caveats stated honestly: the actual trainer is Adam (diagonal preconditioning, not
-plain GD) and runs 3 epochs, so the first-order identity is an approximation twice
-over — which is exactly why the claim is tested as *rank* correlation (Spearman)
-between $-K$ and measured $\Delta\mathrm{CE}$, not as an exact magnitude match.
+**Error budget (why we test rank, not magnitude).** Four terms separate $K$ from
+measured $\Delta\mathrm{CE}$: **(1) curvature** $\tfrac12 \Delta\theta_i^\top H_j
+\Delta\theta_i$, of order $\|H_j\|_2 \|\Delta\theta_i\|^2$, growing with $\eta^2$ and
+horizon$^2$; **(2) trajectory drift** (error in A1), growing with $\eta \times$ steps;
+**(3) preconditioning** (error in A2, since the real optimizer is Adam); **(4) sketch
+variance** $O(1/m)$. All four preserve the *sign* and coarse ordering of $K$ for small
+$\eta$ and short horizons — which is why the claim is tested as *rank* correlation
+(Spearman) between $-K$ and measured $\Delta\mathrm{CE}$, with the proportionality
+constant (absorbing $\eta$, $c$, step count) left free, rather than as an exact
+magnitude match. The horizon-scaling experiment probes when (1)–(2) grow large enough
+to break the rank prediction.
 
 ## 6. CountSketch: making the fingerprint 4096 floats
 

@@ -43,7 +43,7 @@ Yajie Bao, Yang Li, Shao-Lun Huang, Lin Zhang, Lizhong Zheng, Amir Zamir, and
 Moses Charikar, Kevin Chen, and Martin Farach-Colton.
 \newblock Finding frequent items in data streams.
 \newblock In \emph{International Colloquium on Automata, Languages, and
-  Programming (ICALP)}, pages 693--703, 2002.
+  Programming (ICALP)}, pp.\  693--703, 2002.
 
 \bibitem[Choe et~al.(2024)Choe, Ahn, Bae, Zhao, Kang, Chung, Pratapa,
   Neiswanger, Strubell, Mitamura, Schneider, Hovy, Grosse, and
@@ -112,7 +112,7 @@ Roger Grosse, Juhan Bae, Cem Anil, Nelson Elhage, Alex Tamkin, Amirhossein
   functions.
 \newblock \emph{arXiv preprint arXiv:2308.03296}, 2023.
 
-\bibitem[Hidekel and Raviv(2026)]{hidekel2026forgetting}
+\bibitem[Hidekel \& Raviv(2026)Hidekel and Raviv]{hidekel2026forgetting}
 Ido~Nitzan Hidekel and Dan Raviv.
 \newblock Catastrophic forgetting is low-rank: A function-space theory for
   continual adaptation.
@@ -158,12 +158,13 @@ Arthur Jacot, Franck Gabriel, and Cl{\'e}ment Hongler.
 \newblock In \emph{Advances in Neural Information Processing Systems
   (NeurIPS)}, volume~31, 2018.
 
-\bibitem[Johnson and Lindenstrauss(1984)]{johnson1984extensions}
+\bibitem[Johnson \& Lindenstrauss(1984)Johnson and
+  Lindenstrauss]{johnson1984extensions}
 William~B. Johnson and Joram Lindenstrauss.
 \newblock Extensions of {Lipschitz} mappings into a {Hilbert} space.
 \newblock \emph{Contemporary Mathematics}, 26:\penalty0 189--206, 1984.
 
-\bibitem[Kingma and Ba(2015)]{kingma2015adam}
+\bibitem[Kingma \& Ba(2015)Kingma and Ba]{kingma2015adam}
 Diederik~P. Kingma and Jimmy Ba.
 \newblock Adam: A method for stochastic optimization.
 \newblock In \emph{International Conference on Learning Representations
@@ -180,7 +181,7 @@ James Kirkpatrick, Razvan Pascanu, Neil Rabinowitz, Joel Veness, Guillaume
 \newblock \emph{Proceedings of the National Academy of Sciences (PNAS)},
   114\penalty0 (13):\penalty0 3521--3526, 2017.
 
-\bibitem[Koh and Liang(2017)]{koh2017influence}
+\bibitem[Koh \& Liang(2017)Koh and Liang]{koh2017influence}
 Pang~Wei Koh and Percy Liang.
 \newblock Understanding black-box predictions via influence functions.
 \newblock In \emph{Proceedings of the 34th International Conference on Machine
@@ -210,7 +211,7 @@ Jaehoon Lee, Lechao Xiao, Samuel~S. Schoenholz, Yasaman Bahri, Roman Novak,
 \newblock In \emph{Advances in Neural Information Processing Systems
   (NeurIPS)}, volume~32, 2019.
 
-\bibitem[Lee and AlRegib(2020)]{lee2020gradients}
+\bibitem[Lee \& AlRegib(2020)Lee and AlRegib]{lee2020gradients}
 Jinsol Lee and Ghassan AlRegib.
 \newblock Gradients as a measure of uncertainty in neural networks.
 \newblock In \emph{IEEE International Conference on Image Processing (ICIP)},
@@ -286,7 +287,7 @@ Zahra Rahimi~Afzal, Tara Esmaeilbeig, Mojtaba Soltanalian, and Mesrob~I.
 Pranav Rajpurkar, Jian Zhang, Konstantin Lopyrev, and Percy Liang.
 \newblock {SQuAD}: 100,000+ questions for machine comprehension of text.
 \newblock In \emph{Proceedings of the 2016 Conference on Empirical Methods in
-  Natural Language Processing (EMNLP)}, pages 2383--2392, 2016.
+  Natural Language Processing (EMNLP)}, pp.\  2383--2392, 2016.
 
 \bibitem[Ramasesh et~al.(2021)Ramasesh, Dyer, and Raghu]{ramasesh2021anatomy}
 Vinay~V. Ramasesh, Ethan Dyer, and Maithra Raghu.
